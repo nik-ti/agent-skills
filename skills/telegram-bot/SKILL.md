@@ -12,11 +12,11 @@ Every bot you build should be beautiful out of the box. Bot API 10.1 unlocks tab
 ## Stack — non-negotiable
 
 ```
-pip install python-telegram-bot requests telegramify-markdown
+pip install python-telegram-bot httpx telegramify-markdown
 ```
 
 - **`python-telegram-bot`** — all command handling, polling, and update routing
-- **`requests`** — direct calls to `sendRichMessage` (ptb 21.x doesn't wrap Bot API 10.1 yet)
+- **`httpx`** — HTTP client for `sendRichMessage`; use sync (`httpx.post`) outside PTB handlers, async (`await client.post`) inside them. Do not use `requests` inside PTB async handlers — it blocks the event loop.
 - **`telegramify-markdown`** — converts markdown strings to Telegram Rich HTML payloads
 
 Never use aiogram, pyrogram, or raw polling loops.
@@ -24,7 +24,7 @@ Never use aiogram, pyrogram, or raw polling loops.
 Always include a `requirements.txt`:
 ```
 python-telegram-bot==21.10
-requests>=2.31.0
+httpx>=0.27.0
 telegramify-markdown>=1.2.0
 ```
 
@@ -58,13 +58,13 @@ async with httpx.AsyncClient() as client:
 
 ---
 
-## Two sending functions — always present in every bot
+## Four sending functions — always present in every bot
 
-These are the foundation of all output. Include both in every bot, even if you only use one at first.
+Two sync (for fire-and-forget notifiers, background threads, cron scripts) and two async (for inside PTB handlers). Include all four — you will need both pairs.
 
 ```python
 import logging
-import requests
+import httpx
 from telegramify_markdown import richify
 
 TOKEN = "..."
@@ -72,10 +72,14 @@ API_BASE = f"https://api.telegram.org/bot{TOKEN}"
 logger = logging.getLogger(__name__)
 
 
+# ── Sync versions ─────────────────────────────────────────────────────────────
+# Use ONLY outside PTB async handlers (standalone alerters, background threads).
+# requests.post / httpx.post are synchronous — they block the asyncio event loop.
+
 def send_rich(chat_id: int, markdown: str, extra_html: str = "") -> dict:
-    """Markdown → Rich HTML → sendRichMessage. Use for most output."""
+    """Markdown → Rich HTML → sendRichMessage. For outbound alerts."""
     base_html = richify(markdown).to_dict().get("html", "")
-    resp = requests.post(
+    resp = httpx.post(
         f"{API_BASE}/sendRichMessage",
         json={"chat_id": chat_id, "rich_message": {"html": base_html + extra_html}},
         timeout=30,
@@ -87,8 +91,8 @@ def send_rich(chat_id: int, markdown: str, extra_html: str = "") -> dict:
 
 
 def send_rich_html(chat_id: int, html: str) -> dict:
-    """Raw Rich HTML → sendRichMessage. Use when you need <details>, <sub>, <sup>."""
-    resp = requests.post(
+    """Raw Rich HTML → sendRichMessage. For <details>, <sub>, <sup>."""
+    resp = httpx.post(
         f"{API_BASE}/sendRichMessage",
         json={"chat_id": chat_id, "rich_message": {"html": html}},
         timeout=30,
@@ -97,10 +101,53 @@ def send_rich_html(chat_id: int, html: str) -> dict:
     if not data.get("ok"):
         logger.error("sendRichMessage failed: %s", data)
     return data
+
+
+# ── Async versions ────────────────────────────────────────────────────────────
+# Use inside PTB async handlers (cmd_*, handle_callback, etc.).
+# These await the HTTP call so the event loop stays free for other updates.
+
+async def send_rich_async(chat_id: int, markdown: str, extra_html: str = "") -> dict:
+    """Async markdown → Rich HTML → sendRichMessage. For use inside PTB handlers."""
+    base_html = richify(markdown).to_dict().get("html", "")
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"{API_BASE}/sendRichMessage",
+            json={"chat_id": chat_id, "rich_message": {"html": base_html + extra_html}},
+            timeout=30,
+        )
+    data = resp.json()
+    if not data.get("ok"):
+        logger.error("sendRichMessage failed: %s", data)
+    return data
+
+
+async def send_rich_html_async(chat_id: int, html: str) -> dict:
+    """Async raw Rich HTML → sendRichMessage. For <details>, <sub>, <sup> inside PTB handlers."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"{API_BASE}/sendRichMessage",
+            json={"chat_id": chat_id, "rich_message": {"html": html}},
+            timeout=30,
+        )
+    data = resp.json()
+    if not data.get("ok"):
+        logger.error("sendRichMessage failed: %s", data)
+    return data
 ```
 
-Use `send_rich()` (markdown input) for most commands — it's easier to write and read.
-Use `send_rich_html()` when you need precise control: `<details>`, `<sub>`, `<sup>`, or fine-grained nesting.
+### Which to call where
+
+| Context | Function to use |
+|---------|----------------|
+| PTB command handler (`async def cmd_*`) | `await send_rich_async()` / `await send_rich_html_async()` |
+| PTB callback handler (`async def handle_callback`) | `await send_rich_async()` for new messages; see editing note below |
+| Standalone alerter / background thread / cron | `send_rich()` / `send_rich_html()` (sync) |
+| Module-level init or startup code | sync is fine |
+
+### Editing messages — no rich equivalent of editMessageText
+
+`editMessageRichText` does not exist in the Bot API (returns 404). There is no way to edit an existing rich message in-place. When a callback handler needs to update the message after a button tap, send a new rich message instead, or use PTB's native `await query.edit_message_text()` with `ParseMode.HTML` for lightweight edits (bold, italic, code — no tables or headings).
 
 ---
 
@@ -185,12 +232,12 @@ Good for: answers, sensitive values, collapsible alerts, fun easter eggs.
 ---
 ```
 
-### Subscript / Superscript — requires `send_rich_html`
+### Subscript / Superscript — requires `send_rich_html_async`
 ```html
 H<sub>2</sub>O     x<sup>2</sup> + y<sup>2</sup> = r<sup>2</sup>
 ```
 
-### Collapsible section — requires `send_rich_html`
+### Collapsible section — requires `send_rich_html_async`
 ```html
 <details>
   <summary>Click to expand</summary>
@@ -201,7 +248,7 @@ H<sub>2</sub>O     x<sup>2</sup> + y<sup>2</sup> = r<sup>2</sup>
 ```
 Good for: long logs, stack traces, changelogs, verbose output you don't want to clutter the main message.
 
-### Expandable block quote — requires `send_rich_html`
+### Expandable block quote — requires `send_rich_html_async`
 ```html
 <blockquote expandable>
   <p>Long content behind a "Show more" tap.</p>
@@ -229,7 +276,7 @@ Good for: long logs, stack traces, changelogs, verbose output you don't want to 
 ```python
 #!/usr/bin/env python3
 import logging
-import requests
+import httpx
 from telegramify_markdown import richify
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
@@ -246,7 +293,7 @@ logger = logging.getLogger(__name__)
 
 def send_rich(chat_id: int, markdown: str, extra_html: str = "") -> dict:
     base_html = richify(markdown).to_dict().get("html", "")
-    resp = requests.post(
+    resp = httpx.post(
         f"{API_BASE}/sendRichMessage",
         json={"chat_id": chat_id, "rich_message": {"html": base_html + extra_html}},
         timeout=30,
@@ -258,7 +305,7 @@ def send_rich(chat_id: int, markdown: str, extra_html: str = "") -> dict:
 
 
 def send_rich_html(chat_id: int, html: str) -> dict:
-    resp = requests.post(
+    resp = httpx.post(
         f"{API_BASE}/sendRichMessage",
         json={"chat_id": chat_id, "rich_message": {"html": html}},
         timeout=30,
@@ -269,8 +316,35 @@ def send_rich_html(chat_id: int, html: str) -> dict:
     return data
 
 
+async def send_rich_async(chat_id: int, markdown: str, extra_html: str = "") -> dict:
+    base_html = richify(markdown).to_dict().get("html", "")
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"{API_BASE}/sendRichMessage",
+            json={"chat_id": chat_id, "rich_message": {"html": base_html + extra_html}},
+            timeout=30,
+        )
+    data = resp.json()
+    if not data.get("ok"):
+        logger.error("sendRichMessage failed: %s", data)
+    return data
+
+
+async def send_rich_html_async(chat_id: int, html: str) -> dict:
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"{API_BASE}/sendRichMessage",
+            json={"chat_id": chat_id, "rich_message": {"html": html}},
+            timeout=30,
+        )
+    data = resp.json()
+    if not data.get("ok"):
+        logger.error("sendRichMessage failed: %s", data)
+    return data
+
+
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    send_rich(update.effective_chat.id, """\
+    await send_rich_async(update.effective_chat.id, """\
 # Bot Name
 
 One-line description of what this bot does.
@@ -302,7 +376,7 @@ if __name__ == "__main__":
 Read the context and pick the right architecture.
 
 ### Notification / alerting bot
-Pushes messages proactively from a pipeline, cron, or event. No commands needed.
+Pushes messages proactively from a pipeline, cron, or event. No PTB handlers involved — sync `send_rich` is correct here.
 
 ```python
 CHAT_ID = 123456789  # your personal chat ID
@@ -314,19 +388,19 @@ def notify(markdown: str) -> None:
 Use tables for structured status, code blocks for logs, `<details>` for verbose output that shouldn't clutter the alert.
 
 ### Airlock / approval bot
-User triggers an action → bot shows you a summary and asks for approval → you tap a button → bot proceeds.
+User triggers an action → bot shows a summary and asks for approval → you tap a button → bot proceeds.
 
-Add `InlineKeyboardMarkup` with callback buttons (✅ Approve / ❌ Reject) and a `CallbackQueryHandler`. Use `<details>` to show full context collapsed so the approval prompt stays clean.
+Add `InlineKeyboardMarkup` with callback buttons (✅ Approve / ❌ Reject) and a `CallbackQueryHandler`. Call `await query.answer()` immediately at the top of the handler (before any awaits), then send the response as a new rich message with `send_rich_async`. Use `<details>` to collapse full context so the approval prompt stays clean.
 
 ### Full command bot
 Interactive bot with multiple commands and possibly multiple users.
 
-Add `ConversationHandler` for multi-step flows. `/start` always renders a rich command table as the first thing the user sees.
+Add `ConversationHandler` for multi-step flows. `/start` always renders a rich command table. All handlers use the async sending functions.
 
 ### Side-car bot (part of a larger project)
 Bot lives in its own file (`bot.py`, `notifier.py`), imported by the main app.
 
-Export a `notify()` function. If the main app is synchronous, run the bot in its own thread:
+Export a `notify()` function (sync). If the main app is synchronous, run the bot in its own thread:
 
 ```python
 import threading
@@ -338,8 +412,11 @@ threading.Thread(target=main, daemon=True).start()
 ## Rules
 
 - **Always use `sendRichMessage`** — never `send_message` with `parse_mode` for structured output. Rich output looks dramatically better and supports far more elements.
+- **Inside PTB async handlers, always use the `_async` variants** (`send_rich_async`, `send_rich_html_async`). Calling sync httpx/requests inside an async handler blocks the event loop and causes callback query timeouts.
+- **`editMessageRichText` does not exist** (404). There is no in-place rich edit. For callback handlers that need to update content, send a new message.
+- **Call `await query.answer()` immediately** at the top of every `CallbackQueryHandler` — before any network calls. Telegram's callback timeout is 10 seconds from the tap.
 - **`/start` always shows a rich table** of available commands. First impression matters.
-- **`<details>`, `<sub>`, `<sup>` require `send_rich_html`** — `richify` escapes those tags rather than emitting them.
+- **`<details>`, `<sub>`, `<sup>` require the `_html` variants** — `richify` escapes those tags rather than emitting them.
 - **Log every failed API call** with `logger.error`. Never silently swallow errors.
 - **LaTeX in Python strings**: double all backslashes (`\\int`, `\\frac`, `\\sqrt`, `\\pi`). Raw strings (`r"""..."""`) allow single backslashes.
 
