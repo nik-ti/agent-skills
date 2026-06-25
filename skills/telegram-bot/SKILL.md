@@ -28,6 +28,34 @@ requests>=2.31.0
 telegramify-markdown>=1.2.0
 ```
 
+### httpx as an alternative to requests
+
+`httpx` is a drop-in replacement for `requests` with native async support. Use it when the bot is already running in an async context (e.g. inside a PTB handler) and you want to avoid blocking the event loop:
+
+```
+pip install httpx
+```
+
+Sync usage is identical to `requests`:
+```python
+import httpx
+
+resp = httpx.post(f"{API_BASE}/sendRichMessage", json={...}, timeout=30)
+data = resp.json()
+```
+
+Async usage (inside an `async def`, e.g. a PTB command handler):
+```python
+async with httpx.AsyncClient() as client:
+    resp = await client.post(f"{API_BASE}/sendRichMessage", json={...}, timeout=30)
+    data = resp.json()
+```
+
+**When to use which:**
+- Sync bot / fire-and-forget alerter → `requests` (simpler, no client lifecycle)
+- Async PTB handler that sends rich messages → `httpx.AsyncClient` (non-blocking)
+- Mixed codebase → pick one and stay consistent; `httpx` works in both modes
+
 ---
 
 ## Two sending functions — always present in every bot
