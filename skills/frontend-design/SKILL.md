@@ -38,4 +38,17 @@ Interpret creatively and make unexpected choices that feel genuinely designed fo
 
 **IMPORTANT**: Match implementation complexity to the aesthetic vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist or refined designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well.
 
+## Mobile Excellence
+
+**CRITICAL**: Most users will experience your interface on a phone. A stunning desktop design that falls apart on mobile is a failed design. Mobile is not an afterthought — it is the primary canvas.
+
+Every interface must feel exceptional at 375px–430px viewport widths. This means:
+- **Responsive layouts by default**: Use CSS Grid and Flexbox with fluid, wrapping logic. Never hardcode pixel widths that break on small screens. Think in columns that collapse gracefully, not fixed structures that overflow.
+- **Touch-first interactions**: Tap targets must be large enough (minimum 44×44px). Hover-only states are invisible on mobile. Ensure all interactive elements are reachable and satisfying to tap.
+- **Typography that scales**: Use `clamp()` and viewport units (`vw`, `dvh`) to keep type readable and proportional at every size. Headings that look dramatic at 1400px must not dwarf the screen at 390px.
+- **Preserved atmosphere**: The visual depth, textures, gradients, and motion that make the desktop version memorable must carry through to mobile. Simplify the layout, never strip the soul.
+- **Spacing discipline**: Generous desktop whitespace often needs tightening on mobile without losing breathing room. Use consistent spacing scales (e.g., `clamp(1rem, 4vw, 3rem)`) so compositions feel intentional at every breakpoint.
+
+Test the design mentally at 390px before considering it done. If the mobile version looks like a stripped, broken version of the desktop — redesign it. The mobile experience deserves the same creative commitment as the desktop.
+
 Remember: Claude is capable of extraordinary creative work. Don't hold back, show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
