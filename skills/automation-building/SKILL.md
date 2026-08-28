@@ -63,19 +63,18 @@ This is where the main workflow lives. Each file should represent a **logical op
 **File Structure (each node file):**
 
 ```python
-"""
-NODE: [Name of this operation]
-PURPOSE: [What this node does in 1-2 sentences]
-INPUT: [What data/format it expects]
-OUTPUT: [What it returns]
-DEPENDENCIES: [Key libraries used]
-"""
+"""One or two lines: what this node does, and anything surprising about it."""
 
-# Your code here
 def execute(input_data):
-    # ...
+    ...
     return output_data
 ```
+
+**Keep it to that.** A reader who wants the input format, the output shape or
+the dependency list should read the signature and the imports — those are
+already in the file, and a comment restating them is one more thing that goes
+stale. The full What/Input/Output/Why breakdown belongs in the README, once,
+not at the top of every file.
 
 ---
 
@@ -92,14 +91,9 @@ When a node uses an AI model, it needs **extra clarity** because prompts and mod
 **Required Structure at Top of File:**
 
 ```python
-"""
-AI NODE: [Role Name]
-PURPOSE: [What this AI does]
-"""
+"""One or two lines: what this AI node is for."""
 
-# ============================================
-# AI CONFIGURATION (Easy to find and edit)
-# ============================================
+# --- AI configuration: the block to edit when tuning ---
 PROMPT = """Your clear, editable prompt here.
 Can span multiple lines.
 Be specific about what the AI should do."""
@@ -109,10 +103,7 @@ TOOLS = ["web_search", "calculator"]    # List tools if applicable, else empty l
 TEMPERATURE = 0.7                       # Adjust for creativity vs consistency
 MAX_TOKENS = 1000                       # Response length limit
 
-# ============================================
-# Additional settings
-# ============================================
-# Any other model-specific configs go here
+# Any other model-specific settings go here.
 
 # Rest of your code below...
 ```
@@ -384,6 +375,34 @@ services:
 Add Docker files **at the end** after the automation is tested and working.
 
 ---
+
+## How Much to Comment
+
+This is the rule that keeps these projects readable, and the one most often got
+wrong. Aim for **under 15% of a file being prose.** Past that the code stops
+being scannable and the comments start going stale faster than they are read.
+
+**Write a comment when:**
+- The file needs a one- or two-line docstring saying what it is.
+- Something is genuinely surprising — a workaround, a trap, a real incident.
+  "This fails closed on purpose", "a <br> here means Telegram drops the whole
+  message", "the 12h window exists because daily reports score 0.97 on cosine".
+- A number was chosen for a reason a reader could not guess.
+
+**Do not write a comment when:**
+- It restates the code. `# --- Fetch the article ---` above `def fetch_article()`
+  is noise, and so is a docstring listing the arguments the signature already
+  shows.
+- It is a banner. `# ====== SECTION ======` blocks separate nothing that a blank
+  line and a function name do not separate better.
+- It is a tutorial. Explaining what a decorator is, or what an API is, belongs
+  in the README if anywhere.
+- It is history. "This used to be X, then we tried Y" — that is what git log is
+  for, unless the old approach is a trap someone would fall into again.
+
+**A short note that earns its place beats three paragraphs.** If a rationale
+genuinely needs paragraphs, that is a sign it belongs in the README or in
+`docs/`, with the code carrying a one-line pointer to it.
 
 ## Key Principles Summary
 
