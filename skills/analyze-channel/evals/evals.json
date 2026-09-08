@@ -1,0 +1,33 @@
+{
+  "skill_name": "analyze-channel",
+  "evals": [
+    {
+      "id": 1,
+      "name": "telegram-no-scope-question",
+      "prompt": "can you take a look at https://t.me/durov and tell me what that channel is actually about",
+      "expected_output": "Runs telegram_scrape.py for ~100 posts WITHOUT asking clarifying questions, then publishes an Artifact report covering identity, cadence, language/tone, media mix, emoji use, promotion, and engagement (median views vs 10.8M subscribers).",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "youtube-vague-must-scope",
+      "prompt": "analyze this youtube channel for me https://www.youtube.com/@nateherk",
+      "expected_output": "Uses AskUserQuestion to settle depth (metadata vs watch videos) and focus BEFORE collecting. Does not silently start watching videos or dump a generic report.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "youtube-specific-focus-no-redundant-ask",
+      "prompt": "I want to understand exactly how https://www.youtube.com/@nateherk builds and sells n8n automations - go deep on it, watch some of his videos if you need to",
+      "expected_output": "Does NOT re-ask focus or depth (both already given). Runs full metadata scrape, filters to n8n videos, picks ~5 top-viewed, states picks and why, invokes the watch skill with an n8n-specific intent, publishes an Artifact reporting the actual method.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "telegram-private-channel-failure",
+      "prompt": "analyze https://t.me/zzz_no_such_channel_xyz99 please",
+      "expected_output": "Reports plainly that the channel is private/nonexistent/has no public preview and that this route cannot read it. Does not fabricate findings or thrash on workarounds.",
+      "files": []
+    }
+  ]
+}
