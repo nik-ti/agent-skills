@@ -4,3 +4,6 @@
 # Python
 __pycache__/
 *.py[cod]
+
+# Skills auto-synced by Claude Code (managed, not ours)
+skills/synced/
