@@ -1,0 +1,71 @@
+{
+  "skill_name": "build",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I run a small house painting business and want a simple website where people can request a free quote. Just a one-pager with a form (name, phone, address, what they want painted) that sends me an email. Can you build it? Note: you can't reach me during this task \u2014 if you'd normally ask me questions, write them to questions.md along with the answers you're assuming, then proceed.",
+      "expected_output": "questions.md with clarifying questions and assumptions; SPEC.md with a 4-part contract, research findings naming a form backend / static host, gotchas as decisions, build sequence; tests or a manual test checklist created before the site code; the site itself.",
+      "files": [],
+      "assertions": [
+        "questions.md exists and lists clarifying questions before any code (interview happened)",
+        "SPEC.md exists at the project root",
+        "SPEC.md contains all four contract sections: GOAL, CONSTRAINTS, FORMAT, FAILURE",
+        "FAILURE section has at least 3 concrete, checkable conditions (not vague wishes)",
+        "SPEC.md names at least 2 specific existing libraries/services/repos it builds on, with a note on what each saves (research happened)",
+        "SPEC.md has a gotchas section phrased as decisions ('we handle X by doing Y'), not a bare risk list",
+        "SPEC.md includes the exact command(s) to run the project and the tests",
+        "SPEC.md has a Status section a fresh agent could resume from",
+        "SPEC.md is under 150 lines",
+        "Test files (or a manual test checklist for UI-only work) were created BEFORE application code, per the transcript order",
+        "Tests are runnable with one command and exercise at least one FAILURE condition",
+        "Every important source file starts with a short 2-4 sentence note explaining what it does; no paragraph-long headers",
+        "File and folder names are descriptive enough to guess contents without opening them",
+        "Secrets are read from env vars / .env and .env is gitignored"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "make me a telegram bot that checks a few RSS feeds (hacker news, techcrunch) every hour and posts new articles to my channel with a one-line summary. python please. Note: you can't reach me during this task \u2014 if you'd normally ask me questions, write them to questions.md along with the answers you're assuming, then proceed.",
+      "expected_output": "questions.md; SPEC.md with contract incl. FAILURE lines like duplicate posts / silent death; research naming feedparser, python-telegram-bot, existing RSS-to-Telegram repos; tests written before the bot code covering dedupe and parsing; navigable file structure with short file-top notes.",
+      "files": [],
+      "assertions": [
+        "questions.md exists and lists clarifying questions before any code (interview happened)",
+        "SPEC.md exists at the project root",
+        "SPEC.md contains all four contract sections: GOAL, CONSTRAINTS, FORMAT, FAILURE",
+        "FAILURE section has at least 3 concrete, checkable conditions (not vague wishes)",
+        "SPEC.md names at least 2 specific existing libraries/services/repos it builds on, with a note on what each saves (research happened)",
+        "SPEC.md has a gotchas section phrased as decisions ('we handle X by doing Y'), not a bare risk list",
+        "SPEC.md includes the exact command(s) to run the project and the tests",
+        "SPEC.md has a Status section a fresh agent could resume from",
+        "SPEC.md is under 150 lines",
+        "Test files (or a manual test checklist for UI-only work) were created BEFORE application code, per the transcript order",
+        "Tests are runnable with one command and exercise at least one FAILURE condition",
+        "Every important source file starts with a short 2-4 sentence note explaining what it does; no paragraph-long headers",
+        "File and folder names are descriptive enough to guess contents without opening them",
+        "Secrets are read from env vars / .env and .env is gitignored"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want an AI agent that reads my gmail inbox every morning, figures out which emails actually need a reply from me, and sends me a short prioritized list. Note: you can't reach me during this task \u2014 if you'd normally ask me questions, write them to questions.md along with the answers you're assuming, then proceed.",
+      "expected_output": "questions.md; SPEC.md with contract incl. cost per day, prompt injection handling, read-only Gmail scope; research naming Gmail API client and existing inbox-triage projects; tests before code (classification on sample emails, dedupe); the agent code.",
+      "files": [],
+      "assertions": [
+        "questions.md exists and lists clarifying questions before any code (interview happened)",
+        "SPEC.md exists at the project root",
+        "SPEC.md contains all four contract sections: GOAL, CONSTRAINTS, FORMAT, FAILURE",
+        "FAILURE section has at least 3 concrete, checkable conditions (not vague wishes)",
+        "SPEC.md names at least 2 specific existing libraries/services/repos it builds on, with a note on what each saves (research happened)",
+        "SPEC.md has a gotchas section phrased as decisions ('we handle X by doing Y'), not a bare risk list",
+        "SPEC.md includes the exact command(s) to run the project and the tests",
+        "SPEC.md has a Status section a fresh agent could resume from",
+        "SPEC.md is under 150 lines",
+        "Test files (or a manual test checklist for UI-only work) were created BEFORE application code, per the transcript order",
+        "Tests are runnable with one command and exercise at least one FAILURE condition",
+        "Every important source file starts with a short 2-4 sentence note explaining what it does; no paragraph-long headers",
+        "File and folder names are descriptive enough to guess contents without opening them",
+        "Secrets are read from env vars / .env and .env is gitignored"
+      ]
+    }
+  ]
+}
