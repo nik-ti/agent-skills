@@ -23,8 +23,7 @@ For frontend work, choose **one** skill for the task and follow its workflow. Ho
 
 | Frontend task | Skill |
 |---|---|
-| Landing page or conversion-focused marketing page | [landing-page-design](../landing-page-design/SKILL.md) |
-| New website or new page needing a complete design direction | [hallmark](../hallmark/SKILL.md) |
+| New website, landing page, or new page needing a complete design direction | [hallmark](../hallmark/SKILL.md) |
 | UI/UX design system, palette and typography selection, or UX guidance across platforms and frameworks | [ui-ux-pro-max](../ui-ux-pro-max/README.md) |
 | Changes to an existing design, general UI work, or a focused visual improvement | [frontend-design](../frontend-design/SKILL.md) |
 
