@@ -1,13 +1,42 @@
 ---
 name: build
 description: >
-  The default workflow before building anything. Use this BEFORE writing any code whenever the user asks to build, create, make, set up, or ship an app, website, landing page, script, CLI tool, automation, scraper, bot (Telegram/Discord/Slack), AI agent, LLM feature, SaaS, or a significant new feature on an existing project — even when phrased casually ("make me a thing that...", "I want a bot for...", "can you set up..."). Do NOT skip this because the request sounds simple: the user is non-technical and relies on this skill to interview them, pin down concrete success/failure criteria, research existing libraries so nothing is rebuilt from scratch, write SPEC.md, and write tests before the code. Also use it when a project folder already contains a SPEC.md — read it and resume. Skip only if the user literally says to skip planning and just write code.
+  Start here before any build, change, fix, refactor, or improvement, including websites and landing pages. Always read references/principles.md and apply it throughout every iteration. Route frontend work to one appropriate frontend design skill without requiring SPEC.md. Use the remaining interview, research, SPEC.md, tests-first, and phased-build protocol only for backend and other non-frontend work: scripts, CLI tools, automations, scrapers, bots, AI agents, APIs, integrations, and server-side app features. For mixed projects, apply that protocol only to the non-frontend portion. Resume existing backend work from SPEC.md when present. If the user asks to skip planning, still apply the principles and frontend/backend routing.
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit, Task, Agent, WebSearch, WebFetch, AskUserQuestion
 ---
 
 # Build
 
-The user is not a developer. They can't tell you upfront about rate limits, empty states, race conditions, or that a library already does 80% of the job — they've never hit those things. So the burden is on you, before writing a line of code, to interview them like a product manager, research like someone who already spent an hour on GitHub, and think like the full-stack engineer they don't have.
+This skill establishes the engineering foundation for every change, then routes the work by scope. Its detailed build protocol applies only to backend and other non-frontend work.
+
+## First: Read and apply the principles — every time
+
+Before planning or making any change, read [references/principles.md](references/principles.md). These are the foundation for every build, fix, improvement, and refactor, including frontend work, websites, and landing pages. Do not skip them because the task is small or the project already exists.
+
+Keep these principles active throughout the work: revisit them before each iteration or phase, when changing approach, and before delivery. Apply the relevant principles within the task's scope and authorization; do not treat them as a one-time preflight checklist. Reading them does not require a SPEC.md for frontend work.
+
+## Next: Route frontend and non-frontend work
+
+**Everything below this routing section is only for backend and other non-frontend work.** Frontend work follows the principles above and one frontend design skill instead of the protocol below.
+
+For frontend work, choose **one** skill for the task and follow its workflow. Honor the user's named skill first; otherwise select by scope:
+
+| Frontend task | Skill |
+|---|---|
+| Landing page or conversion-focused marketing page | [landing-page-design](../landing-page-design/SKILL.md) |
+| New website or new page needing a complete design direction | [hallmark](../hallmark/SKILL.md) |
+| UI/UX design system, palette and typography selection, or UX guidance across platforms and frameworks | [ui-ux-pro-max](../ui-ux-pro-max/README.md) |
+| Changes to an existing design, general UI work, or a focused visual improvement | [frontend-design](../frontend-design/SKILL.md) |
+
+Do not combine these design skills or stack their visual rules; they contain conflicting requirements. Use Hallmark on an existing design only when the user explicitly requests it. Preserve the project's established design system when making focused changes.
+
+**Frontend-only work stops here.** Do not create or require `SPEC.md`, run the backend interview, or impose the backend tests-first protocol on a website, landing page, or UI-only change. Use the selected frontend skill's planning and validation, and verify the result in a real browser with desktop and mobile screenshots. The shared principles still apply on every iteration.
+
+For a project with both frontend and backend work, route the UI to one frontend skill and apply the protocol below only to the backend portion. A backend `SPEC.md` may document the interfaces the UI depends on; it does not turn UI work into a backend workflow. A page that only uses an existing API remains frontend work unless backend changes are also needed.
+
+## Backend and non-frontend build protocol
+
+The user is not a developer. They can't tell you upfront about rate limits, race conditions, or that a library already does 80% of the job — they've never hit those things. So the burden is on you, before writing a line of backend code, to interview them like a product manager, research like someone who already spent an hour on GitHub, and think like the engineer they don't have.
 
 Four failure modes this skill exists to prevent:
 
@@ -20,7 +49,7 @@ Everything discovered here lives in one file, `SPEC.md`, at the project root. It
 
 ## Step 0: Is there already a SPEC.md?
 
-Look for `SPEC.md` in the project root before anything else. If it exists, read it, then read its **Status** section twice. That's where you are. Skip the interview, skip the initial research, and pick up the build sequence from where Status says it stopped. If Status is stale or contradicts the code, fix Status first — a wrong map is worse than no map.
+After reading the principles and routing the work, look for `SPEC.md` in the project root. If it exists, read it, then read its **Status** section twice. That's where you are. Skip the interview, skip the initial research, and pick up the backend build sequence from where Status says it stopped. If Status is stale or contradicts the code, fix Status first — a wrong map is worse than no map.
 
 If there's no SPEC.md, continue.
 
@@ -30,7 +59,7 @@ Goal: leave this step able to write **GOAL** and **FAILURE** lines that are conc
 
 Use `AskUserQuestion` if it's available (batches of up to 4 questions, offer sensible options); otherwise ask in chat. Plain language, no jargon. Cover, in roughly this order:
 
-1. **What it does, who uses it, where it runs.** One or two sentences you could repeat back. Local script, website, web app, phone, Telegram bot, background job, AI agent with tool access?
+1. **What it does, who uses it, where it runs.** One or two sentences you could repeat back. Local script, API, web app backend, Telegram bot, background job, AI agent with tool access?
 2. **What "done" looks like as observable behavior.** Ask for the moment they'd sit back and say "yes, this is it". Push until it's something you could watch happen: "a stranger fills the form on their phone and I get an email within a minute" — not "the form works".
 3. **What would make them call it a failure even if it technically works.** This is the most important question and the one people skip. Slow? Ugly? Spams them with notifications? Misses items? Costs money per run? Needs babysitting? Get 3+ concrete lines.
 4. **Non-negotiables.** Stack or tools they already pay for or know, accounts they already own, budget (especially for metered APIs), deadline, anything that must stay the same.
@@ -53,16 +82,15 @@ The premise: for almost any feature you're about to write, someone already publi
 
 For each promising find record: what it saves you from building, maintenance status (last commit / release — don't recommend anything abandoned), license, and the use-vs-build tradeoff. Bias hard toward using well-maintained existing tools for anything that isn't the unique point of this project. If research changes the recommended approach, say so plainly — that's often the most valuable output of the whole step.
 
-**This rule stays on for the entire build, not just planning.** Whenever a new sub-problem appears mid-implementation (parsing a format, retry logic, a UI component, a scraping target), spend a minute searching before hand-rolling it. Note anything adopted in SPEC.md under *Built on top of*.
+**This rule stays on for the entire backend build, not just planning.** Whenever a new sub-problem appears mid-implementation (parsing a format, retry logic, an API integration, a scraping target), spend a minute searching before hand-rolling it. Note anything adopted in SPEC.md under *Built on top of*.
 
-## Step 3: Full-stack gotcha pass
+## Step 3: Backend and non-frontend gotcha pass
 
 Now think like the senior engineer and product designer the user doesn't have. Read the one or two reference files that match the project — they're short and grouped by type:
 
 | Project type | Read |
 |---|---|
-| Static site, landing page, marketing site, frontend-only | `references/gotchas-website.md` |
-| Web app / SaaS with backend, accounts, database, payments, deployment | `references/gotchas-webapp-saas.md` |
+| Web app / SaaS backend, accounts, database, payments, deployment | `references/gotchas-webapp-saas.md` (backend concerns only; UI work follows the selected frontend skill) |
 | Automation, scheduled job, scraper, bot, third-party integration | `references/gotchas-automation.md` |
 | AI agent, LLM feature, anything calling a model | `references/gotchas-ai-agent.md` |
 | Local script, CLI tool, one-off data transform | `references/gotchas-script-cli.md` |
@@ -100,7 +128,6 @@ Derive tests from the GOAL and FAILURE lines *now*, before any application code 
 - Cover the important features, not everything. A handful of tests that catch the FAILURE lines beats fifty that check nothing the user cares about.
 - Make them runnable with one command, and record that command in SPEC.md under *How to run and test*. If the user can't run them, they don't exist.
 - Run them once before building. They should fail. A test that passes against nothing isn't testing anything.
-- For UI-heavy projects where automated tests fit poorly, the "test" is a written manual checklist derived from the same FAILURE lines, walked through in a real browser at phone width before calling anything done.
 
 Don't touch application code until the tests are written and failing.
 
@@ -138,5 +165,6 @@ Then do a final Status update in SPEC.md.
 
 ## Reference files
 
+- [references/principles.md](references/principles.md) — mandatory foundation for every change and every iteration, frontend and backend alike.
 - `references/spec-template.md` — the SPEC.md skeleton and rules for keeping it short.
-- `references/gotchas-*.md` — per-project-type checklists for Step 3 (see table above).
+- `references/gotchas-*.md` — backend and non-frontend checklists for Step 3 (see table above). `gotchas-website.md` is not part of this backend protocol.
