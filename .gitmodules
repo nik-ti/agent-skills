@@ -1,4 +1,4 @@
 [submodule "treg"]
-	path = skills/treg
+	path = skills/treg/upstream
 	url = https://github.com/superdesigndev/treg.git
 	branch = main
