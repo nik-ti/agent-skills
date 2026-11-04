@@ -1,10 +1,8 @@
-# Shared agent skills
+# Treg skills
 
-This repository holds Nikita's shared agent instructions. Both `~/.agents/skills` and `~/.claude/skills` point to its `skills/` folder, so changes have one shared source.
+This folder holds all seven Treg skills and their local setup notes. The upstream files live in `upstream/skills/`; `upstream/` is a Git submodule, so this shared repository records a specific Treg revision while Treg keeps its own history.
 
-## Treg skills
-
-All seven upstream Treg skills live in `skills/treg/skills/`, inside the single `skills/treg/` folder. That folder is a Git submodule: this repository records a specific Treg revision, while Treg keeps its own Git history and upstream remote.
+Both `~/.agents/skills` and `~/.claude/skills` point to the shared skills folder, so these files have one shared source.
 
 Installed skills: `treg`, `rea-growth`, `web-access`, `lead-signals`, `make-ugc`, `recruit`, and `jev-memory`. Installing these files does not activate the optional Claude Code memory extension or run any paid workflows.
 
@@ -12,10 +10,10 @@ Source: https://github.com/superdesigndev/treg/tree/main/skills
 
 ### Update all Treg skills
 
-From this repository, run:
+From the `agent-skills` repository root, run:
 
 ```sh
-git submodule update --remote -- skills/treg
+git submodule update --remote -- skills/treg/upstream
 ```
 
 This fetches Treg's latest `main` revision. The local checkout only includes the upstream `skills/` directory, keeping the server application out of the working folder. Existing skills update together, and new upstream skill folders appear on the next update.
@@ -23,18 +21,18 @@ This fetches Treg's latest `main` revision. The local checkout only includes the
 To save the new revision in this shared repository:
 
 ```sh
-git add skills/treg
+git add skills/treg/upstream
 git commit -m "Update Treg skills from upstream"
 git push
 ```
 
-Use this Git update command for these files rather than `treg skill bootstrap`, which installs standalone copies. Keep local customizations outside the upstream submodule so updates stay straightforward.
+Use this Git update command for these files rather than `treg skill bootstrap`, which installs standalone copies. Keep local notes and customizations beside `upstream/`, outside the submodule, so updates stay straightforward.
 
 ### Set up an existing clone
 
 ```sh
-git submodule update --init -- skills/treg
-git -C skills/treg sparse-checkout set --no-cone /skills/
+git submodule update --init -- skills/treg/upstream
+git -C skills/treg/upstream sparse-checkout set --no-cone /skills/
 ```
 
 Codex was verified to discover all seven nested skills through the shared user skills directory. Skills should be available on the next turn; restart the agent if its list has not refreshed. Claude Code shares these files, but its discovery was not checked during this installation.
