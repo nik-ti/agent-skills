@@ -17,7 +17,7 @@ from common import fmt_time, read_json, transcript_text, video_numbers
 
 GAP_SECONDS = 40
 READ_ALONE_TOKENS = 60_000  # more transcript than this goes to subagents
-NOTES_RATIO = 8  # measured: a 84k-token episode gave about 10k tokens of notes
+NOTES_RATIO = 3  # measured: 77k tokens of dense English gave about 37k of notes; rambling talk shrinks more
 ROLLUP_ABOVE_TOKENS = 80_000  # more notes than this can't be read at once, so they get merged in batches
 BATCH_TOKENS = 60_000
 

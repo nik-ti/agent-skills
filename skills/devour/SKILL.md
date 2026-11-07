@@ -60,7 +60,7 @@ Use `--lang <code>` to prefer a language; the default is each video's own langua
 
 Each video ends in one state: `done`, `no_captions`, `failed` (yt-dlp was blocked) or `skipped` (private, members-only, not yet live).
 
-**If videos are `failed`,** rerun with `--treg`, which uses the paid treg.to endpoints. The script finds the key itself: `TREG_TOKEN` in the environment, or else `TREG_API_KEY` in the workspace `.env`. If it finds neither, ask the user; never print the key or copy it anywhere. Say the cost in one line before running (about $0.002 per video, shown by the script), and ask first if it would pass $1. Don't use the treg MCP tools here: they're connected to a separate business account that must not be billed for this. For the endpoint details, read `references/treg.md`.
+**If videos are `failed`,** rerun with `--treg`, which uses the paid treg.to endpoints. The script finds the key itself: `TREG_TOKEN` in the environment, or else `TREG_API_KEY` in the workspace `.env`. If it finds neither, ask the user; never print the key or copy it anywhere. Say the cost in one line before running (about a fifth of a cent per video, shown by the script), and ask first if it would pass one dollar. Don't use the treg MCP tools here: they're connected to a separate business account that must not be billed for this. For the endpoint details, read `references/treg.md`.
 
 **If videos are `no_captions`,** go to step 4. Treat a failed video that treg can't get either the same way.
 

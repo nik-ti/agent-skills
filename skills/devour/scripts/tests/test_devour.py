@@ -2,6 +2,7 @@
 They cover the parts that fail quietly: caption parsing, track choice, the treg token guard,
 chunking, and the document checker. Nothing here touches the network.
 """
+import re
 import sys
 import tempfile
 import unittest
@@ -223,8 +224,8 @@ class Assembly(unittest.TestCase):
 class BigRuns(unittest.TestCase):
     def test_route_grows_with_the_source(self):
         self.assertIn("yourself", chunk_transcripts.route(50_000))
-        self.assertIn("subagents", chunk_transcripts.route(300_000))
-        self.assertNotIn("rollup", chunk_transcripts.route(300_000))
+        self.assertIn("subagents", chunk_transcripts.route(200_000))
+        self.assertNotIn("rollup", chunk_transcripts.route(200_000))
         self.assertIn("rollup", chunk_transcripts.route(12_000_000))
 
     def test_rollup_batches_stay_under_the_limit_and_lose_nothing(self):
@@ -304,6 +305,12 @@ class Sizing(unittest.TestCase):
     def test_gaps(self):
         segments = [{"start": 0, "text": "a"}, {"start": 10, "text": "b"}, {"start": 100, "text": "c"}]
         self.assertEqual(chunk_transcripts.caption_gaps(segments), [(10, 100)])
+
+
+class SkillText(unittest.TestCase):
+    def test_no_dollar_digits_because_the_harness_fills_them_with_arguments(self):
+        text = (Path(__file__).parent.parent.parent / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIsNone(re.search(r"\$\d", text))
 
 
 class Storage(unittest.TestCase):
