@@ -27,6 +27,12 @@ CLIENTS = ["default", "android_vr", "tv_embedded", "web_embedded"]
 UNAVAILABLE = re.compile(r"private video|members.only|join this channel|video unavailable|has been removed|"
                          r"premieres in|live event will begin|offline|not available in your country", re.I)
 BACKOFF_SECONDS = (20, 60)
+BLOCKED_AFTER = 5
+
+
+def looks_blocked(states):
+    """Several failures in a row means YouTube is refusing us, so more attempts only make it worse."""
+    return len(states) >= BLOCKED_AFTER and all(state == "failed" for state in states[-BLOCKED_AFTER:])
 
 
 def parse_json3(data):
@@ -218,6 +224,7 @@ def main():
     ids = parse_ids(args.ids, args.dir)
     save_selection(args.dir, ids)
     spent = 0.0
+    states = []
     for position, video_id in enumerate(ids, 1):
         video = videos[video_id]
         print(f"[{position}/{len(ids)}] {video['title'][:70]}", flush=True)
@@ -230,17 +237,23 @@ def main():
         except treg_client.TregError as error:
             set_status(args.dir, video_id, state="failed", reason="treg balance is empty")
             raise SystemExit(f"Stopping: the treg account is out of funds. Top up at https://treg.to/app#billing. ({error})")
-        print(f"  {load_status(args.dir)[video_id].get('state')}", flush=True)
+        states.append(load_status(args.dir)[video_id].get("state"))
+        print(f"  {states[-1]}", flush=True)
+        if looks_blocked(states):
+            print(f"\nYouTube looks like it's blocking requests, so stopping at {position} of {len(ids)}."
+                  " Rerun the same command later, or with --treg. Saved videos won't be fetched again.")
+            break
         if position < len(ids):
             time.sleep(args.sleep)
 
     status = load_status(args.dir)
     groups = {}
     for video_id in ids:
-        groups.setdefault(status[video_id]["state"], []).append(video_id)
+        groups.setdefault(status.get(video_id, {}).get("state", "not_reached"), []).append(video_id)
     print("\nRESULT")
     for state, members in groups.items():
-        print(f"  {state}: {len(members)}" + ("" if state == "done" else f"  ({','.join(members)})"))
+        shown = ",".join(members[:20]) + (",..." if len(members) > 20 else "")
+        print(f"  {state}: {len(members)}" + ("" if state == "done" else f"  ({shown})"))
     if spent:
         print(f"  treg spend: ~${spent:.4f}")
     silent = sum(videos[v].get("duration") or 0 for v in groups.get("no_captions", []))

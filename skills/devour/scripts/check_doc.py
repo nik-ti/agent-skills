@@ -19,6 +19,7 @@ SKIP_TEXT = {"script", "style", "svg", "title"}
 VOID = {"meta", "link", "img", "br", "hr", "input", "source", "area", "base", "col", "embed", "track", "wbr"}
 WORDS_PER_MINUTE = 230
 STAMP_TOLERANCE_SECONDS = 5
+BIG_RUN_VIDEOS = 20
 
 
 class Doc(HTMLParser):
@@ -138,7 +139,7 @@ def check(text, status, durations, starts):
     missing = set(status) - doc.sources_ids
     if doc.sources_ids and missing:
         errors.append("missing from the sources list: " + ", ".join(sorted(missing)))
-    if used - cited:
+    if used - cited and len(used) <= BIG_RUN_VIDEOS:  # a big run's doc is selective, so gaps are expected
         warnings.append("used but never cited with a timestamp: " + ", ".join(sorted(used - cited)))
     if doc.figures == 0:
         warnings.append("no diagrams in the document")

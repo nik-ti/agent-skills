@@ -10,6 +10,8 @@ Write for one smart reader who hasn't watched any of these videos. This is a lon
 | Standard | about 30 min | 6,000 to 8,000 |
 | Deep | about 60 min | 12,000 to 15,000 |
 
+The source never pushes the doc past these sizes. Whether it's 3 videos or 400, the reader gets the same length of read, so a bigger source means a higher bar for what gets in. On a big run, lead with the ideas that come up most and the ones that are most useful, treat a one-off remark as a detail at most, and say in the framing what was left out.
+
 These are targets for rich material. Thin sources give a shorter doc, and the doc says so at the top. As a guide, a doc shouldn't run past about 1.5 times the words of its transcripts, and a repetitive conversation condenses further than a tight lecture.
 
 ## Structure
@@ -38,8 +40,8 @@ These are targets for rich material. Thin sources give a shorter doc, and the do
 
 ## Citations
 
-Cite right after the idea with `[[V3 12:34]]`, using the V number printed by the chunker and a stamp from the notes. The assembler turns these into linked chips. When an idea appears in several videos, cite each. Aim for a citation about once a paragraph, not on every sentence.
+Cite right after the idea with `[[V3 12:34]]`, using the V number printed by the chunker and a stamp from the notes. The assembler turns these into linked chips. When an idea appears in a few videos, cite each. When it appears in many, cite the best two or three and say how widespread it is ("this comes up in about 40 episodes"). Aim for a citation about once a paragraph, not on every sentence.
 
 ## Language
 
-Write in the language agreed in the interview. For a non-English doc, also translate the template's headings and the `L` labels at the top of its script. Avoid filler like "in this section we will explore" or "it's important to note". Don't use a "not X, but Y" reveal as a habit. Plain, specific sentences teach better.
+Write in the language chosen in the interview, and set `lang` to match. Pass the same language to the assembler, which translates the template's built-in labels for Russian. Avoid filler like "in this section we will explore" or "it's important to note". Don't use a "not X, but Y" reveal as a habit. Plain, specific sentences teach better.

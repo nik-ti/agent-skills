@@ -220,6 +220,66 @@ class Assembly(unittest.TestCase):
         self.assertIn("private", html)
 
 
+class BigRuns(unittest.TestCase):
+    def test_route_grows_with_the_source(self):
+        self.assertIn("yourself", chunk_transcripts.route(50_000))
+        self.assertIn("subagents", chunk_transcripts.route(300_000))
+        self.assertNotIn("rollup", chunk_transcripts.route(300_000))
+        self.assertIn("rollup", chunk_transcripts.route(12_000_000))
+
+    def test_rollup_batches_stay_under_the_limit_and_lose_nothing(self):
+        files = [(f"n{i}.md", 30) for i in range(10)]
+        batches = chunk_transcripts.plan_batches(files, 100)
+        self.assertEqual([len(batch) for batch in batches], [3, 3, 3, 1])
+        self.assertEqual([name for batch in batches for name in batch], [name for name, _ in files])
+
+    def test_one_oversized_file_still_gets_a_batch(self):
+        self.assertEqual(chunk_transcripts.plan_batches([("big.md", 500), ("s.md", 10)], 100), [["big.md"], ["s.md"]])
+
+    def test_long_source_list_is_folded_away(self):
+        numbers = {f"V{i}": f"id{i}" for i in range(1, 31)}
+        records = {vid: {"title": "t", "url": "u", "duration": 1} for vid in numbers.values()}
+        status = {vid: {"state": "done"} for vid in numbers.values()}
+        html = assemble_doc.sources_html(numbers, list(numbers.values()), status, records, {})
+        self.assertIn("<details", html)
+        self.assertIn("30", html)
+        short = {"V1": "id1"}
+        self.assertNotIn("<details", assemble_doc.sources_html(short, ["id1"], status, records, {}))
+
+    def test_uncited_videos_only_warn_on_small_runs(self):
+        status = {f"id{i}": {"state": "done"} for i in range(30)}
+        page = '<!DOCTYPE html><title>T</title><section id="sources">' + "".join(
+            f'<a href="https://youtu.be/id{i}">x</a>' for i in range(30)) + "</section>"
+        self.assertFalse(any("never cited" in w for w in check_doc.check(page, status, {}, {})[1]))
+
+    def test_repeated_failures_mean_youtube_is_blocking(self):
+        self.assertTrue(ft.looks_blocked(["done"] + ["failed"] * 5))
+        self.assertFalse(ft.looks_blocked(["failed"] * 4 + ["done", "failed"]))
+        self.assertFalse(ft.looks_blocked(["failed"] * 4))
+
+
+class Russian(unittest.TestCase):
+    PAGE = """<nav aria-label="Contents"><summary>Contents</summary></nav><h2>The short version</h2><h2>Sources</h2>
+<script>var L = { back: 'Back', step: 'Step %1 of %2', apply: 'Applying this to you' };</script>"""
+
+    def test_labels_translate(self):
+        text = assemble_doc.translate(self.PAGE, "ru")
+        for english in ("Contents", "The short version", "Sources", "'Back'", "Step %1", "Applying this"):
+            self.assertNotIn(english, text)
+        self.assertIn("Коротко", text)
+        self.assertIn("Шаг %1 из %2", text)
+
+    def test_english_is_untouched(self):
+        self.assertEqual(assemble_doc.translate(self.PAGE, "en"), self.PAGE)
+
+    def test_sources_table_translates(self):
+        records = {"A": {"title": "t", "url": "u", "duration": 60}}
+        html = assemble_doc.sources_html({"V1": "A"}, ["A"], {"A": {"state": "done", "source": "local-whisper"}}, records, {}, "ru")
+        self.assertIn("Видео", html)
+        self.assertIn("расшифровано локально", html)
+        self.assertNotIn("Length", html)
+
+
 class Selection(unittest.TestCase):
     def test_only_this_runs_videos_count(self):
         with tempfile.TemporaryDirectory() as folder:
