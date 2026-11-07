@@ -1,0 +1,17 @@
+{
+  "skill_name": "devour",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "https://www.youtube.com/@BetterU-101  (interview answers: videos nbxi7_I09fI, dCwXjBa_jNs, DcnKaEiuJsM; standard depth; beginner, doc in English)",
+      "expected_output": "A concept-organized HTML doc from 3 short videos that says the source is thin, passing check_doc.py, with diagrams and timestamped citations",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "https://www.youtube.com/@AnufrievNikita  (interview answers: video Qt3cNpDKg1s, about 3 hours in Russian; deep read; someone building trading bots, doc in English)",
+      "expected_output": "A deep English read merged by idea across the episode's guests, built from chunked notes, passing check_doc.py, flagging the sponsor conflict",
+      "files": []
+    }
+  ]
+}
