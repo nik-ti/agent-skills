@@ -96,6 +96,8 @@ A section called "Episode 12" means the merging hasn't happened yet. A video may
 
 ## 7. Write the doc
 
+Always produce light-theme-only guides. Keep the page light regardless of the device's color scheme or any previously saved theme preference; do not add dark mode, automatic theme switching, or a theme toggle. The shared HTML template follows this rule.
+
 Read `references/writing_the_doc.md` for how to write it and `references/visuals.md` for the diagrams. Copy `assets/doc_template.html` to `<channel dir>/draft.html` and fill it in. Its styles, navigation and explainer widgets are ready to use. On a big run, write one section at a time, going back to the detailed notes for that section's ideas (search `notes/` for the names in the rollups). Cite with the shorthand `[[V1 12:34]]` and leave `{{SOURCES}}` in place, then build the page:
 
 ```bash
@@ -112,7 +114,7 @@ python3 scripts/check_doc.py <channel dir>/knowledge-doc.html --dir <channel dir
 
 Fix every error, and fix warnings unless there's a good reason. This catches citations to videos or moments that don't exist, chips that disagree with their links, anything that won't work offline, and videos missing from the sources list.
 
-Then open the page in a real browser at desktop (1280) and phone (390) widths. Screenshot each diagram and explainer section; these pages are too tall for full-page screenshots, which fail past about 16,000 pixels. Look for clipped diagrams, overlapping labels and sideways scrolling, try every interactive explainer, and check dark mode too. A diagram that's unreadable on a phone needs fixing, because the checker can't see that.
+Then open the page in a real browser at desktop (1280) and phone (390) widths. Screenshot each diagram and explainer section; these pages are too tall for full-page screenshots, which fail past about 16,000 pixels. Look for clipped diagrams, overlapping labels and sideways scrolling, and try every interactive explainer. Verify that the page stays light with a dark device preference and a previously saved dark theme. A diagram that's unreadable on a phone needs fixing, because the checker can't see that.
 
 ## 9. Deliver
 

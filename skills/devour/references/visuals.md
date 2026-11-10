@@ -23,7 +23,7 @@ Hand-write inline `<svg>`. Mermaid and similar sources won't render here, and th
 
 - Wrap each one in `<figure class="diagram">` with a `<figcaption>` that states what it shows, and give the svg `role="img"` plus an `aria-label` making the same claim.
 - Size it with `viewBox` only, no fixed width, and keep it 360 to 440 units wide. On a phone a diagram has about 320 pixels, so a 640-wide drawing would shrink 14-unit labels to an unreadable 7 pixels. Where there's more to show, go taller and stack vertically. The template caps diagrams at 520 pixels so they don't balloon on a desktop; add `class="wide"` to the svg only for a chart that needs the full column.
-- Use `currentColor` and the template's classes so it works in light and dark mode: `.box` for shapes, `.box.accent` for the one element that matters, `.edge` for lines, `.label` and `.label.small` for text.
+- Use `currentColor` and the template's classes for a consistent light-theme palette: `.box` for shapes, `.box.accent` for the one element that matters, `.edge` for lines, `.label` and `.label.small` for text.
 - Label the arrows ("writes", "polls every 30s"). An unlabelled arrow says almost nothing.
 - Keep labels to a few words, and put the explanation in the caption. Align to a grid with even gaps.
 - For arrowheads, use the template's shared markers: `marker-end="url(#arrow)"`, or `url(#arrow-accent)` on an `.edge.accent` line.

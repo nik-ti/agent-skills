@@ -1,20 +1,17 @@
 <!DOCTYPE html>
-<html lang="{{LANG}}">
+<html lang="{{LANG}}" data-theme="light">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="light">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{TITLE}}</title>
 <!-- devour knowledge doc shell. Fully self-contained: no network requests, so it keeps working offline. -->
 <style>
 :root {
+  color-scheme: only light;
   --bg: #fbfbfa; --surface: #ffffff; --ink: #1d2026; --muted: #5d6470; --line: #e3e4e8; --edge: #c9ccd4;
   --accent: #4257c9; --accent-soft: #eceffb; --note: #f4f3ee;
   --radius: 14px; --shadow: 0 1px 2px rgba(20,24,40,.04), 0 8px 24px rgba(20,24,40,.05);
-}
-:root[data-theme="dark"] {
-  --bg: #14161b; --surface: #1c1f26; --ink: #e8e9ec; --muted: #a0a6b2; --line: #30343e; --edge: #5b6272;
-  --accent: #9dacf5; --accent-soft: #262c47; --note: #23252c;
-  --shadow: 0 1px 2px rgba(0,0,0,.3);
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 24px; -webkit-text-size-adjust: 100%; }
@@ -32,7 +29,6 @@ nav.toc ol { list-style: none; margin: 0; padding: 0; }
 nav.toc a { display: block; padding: 6px 12px; border-radius: 8px; color: var(--muted); text-decoration: none; }
 nav.toc a:hover { color: var(--ink); }
 nav.toc a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-#theme { margin-top: 16px; font: inherit; font-size: 13px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
 main { min-width: 0; }
 header.hero { margin-bottom: 40px; }
 .eyebrow { font-size: 14px; font-weight: 600; color: var(--accent); margin: 0 0 12px; }
@@ -100,7 +96,6 @@ th { font-size: 13px; color: var(--muted); font-weight: 600; }
   nav.toc { position: static; max-height: none; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; }
   nav.toc summary { padding: 4px 12px; margin-bottom: 0; }
   nav.toc details[open] summary { margin-bottom: 6px; }
-  #theme { margin: 10px 0 4px 12px; }
   h2 { font-size: 26px; margin-top: 48px; }
   figure.diagram, .explainer { padding: 14px; }
   .takeaways { padding: 18px 20px 6px; }
@@ -120,7 +115,6 @@ th { font-size: 13px; color: var(--muted); font-weight: 600; }
     <details id="toc-box" open>
       <summary>Contents</summary>
       <ol id="toc-list"></ol>
-      <button id="theme" type="button">Dark mode</button>
     </details>
   </nav>
   <main>
@@ -149,7 +143,7 @@ th { font-size: 13px; color: var(--muted); font-weight: 600; }
 (function () {
   // Translate these when the doc isn't in English.
   var L = {
-    back: 'Back', next: 'Next', step: 'Step %1 of %2', dark: 'Dark mode', light: 'Light mode',
+    back: 'Back', next: 'Next', step: 'Step %1 of %2',
     background: 'Background, added for context', differ: 'Where they differ', apply: 'Applying this to you'
   };
   var main = document.querySelector('main');
@@ -184,21 +178,6 @@ th { font-size: 13px; color: var(--muted); font-weight: 600; }
   }
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-
-  var root = document.documentElement, toggle = document.getElementById('theme');
-  function setTheme(mode) {
-    root.setAttribute('data-theme', mode);
-    toggle.textContent = mode === 'dark' ? L.light : L.dark;
-  }
-  var saved = null, system = matchMedia('(prefers-color-scheme: dark)');
-  try { saved = localStorage.getItem('devour-theme'); } catch (e) {}
-  setTheme(saved || (system.matches ? 'dark' : 'light'));
-  system.addEventListener('change', function (e) { if (!saved) setTheme(e.matches ? 'dark' : 'light'); });
-  toggle.addEventListener('click', function () {
-    saved = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    setTheme(saved);
-    try { localStorage.setItem('devour-theme', saved); } catch (e) {}
-  });
 
   function button(text) {
     var b = document.createElement('button');
