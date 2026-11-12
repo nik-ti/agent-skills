@@ -1,62 +1,63 @@
-# SPEC.md template
+# SPEC.md template — product agreement
 
-Copy the skeleton below into `SPEC.md` at the project root and fill it in. This file is the project's memory: a fresh agent in a new session reads it once and continues without re-interviewing anyone. That only works if it stays short.
+Use this template for backend and other non-frontend work. It records the agreed product behavior and acceptance criteria; websites and frontend-only work do not require a spec.
 
 ## Rules for keeping it useful
 
-- **Concise over complete.** Aim for under ~150 lines total. If it grows past that, compress — merge bullets, delete anything the code now explains on its own.
-- **Status is "where we are", not a changelog.** Don't log every step. Record what's built, what changed from the plan and why, and what the next session needs to know. Replace stale lines instead of appending to them.
-- **Every FAILURE line must be checkable.** If you can't say how you'd verify it, rewrite it or mark it `UNVERIFIABLE` with a manual check the user can do.
-- **Record the exact commands** to run the project and the tests. A new agent shouldn't have to rediscover them.
-- **Plain language.** The user reads this too. Name the real-world consequence of a tradeoff, not just its technical name.
-- **Never put secrets in it.** Reference `.env` variable names, not values.
+- Describe what the product must do, for whom, and under which constraints. Include business rules and scope; exclude architecture research, implementation plans, commands, status, and history.
+- Ask thoughtful follow-up questions about meaningful gaps before treating a rule as agreed. Reuse existing answers and inspect available context; do not repeat obvious questions or stop at a fixed number of rounds.
+- Write multiple distinct success and failure criteria covering important workflows, alternatives, boundaries, and recovery. Do not pad counts with duplicates or generic wishes.
+- Each criterion has an ID, a concrete scenario, an observable expected/prohibited result, and a feasible acceptance check. Use agreed thresholds where relevant; do not invent them.
+- Keep unresolved product decisions visibly unapproved. Do not silently turn assumptions or current implementation behavior into requirements.
+- Keep requirements concise without removing necessary detail to meet a line cap. Link detailed feature agreements when useful.
+- Change approved requirements only when authorized by the user. Failing code or tests do not change the agreement.
+- Keep setup/test commands and technical choices in the README or an existing run/design guide. Keep concise progress and verification evidence in the required project-root `changelog.md`, including for frontend projects without a spec.
+- Use plain language and never include secrets or customer data. Use synthetic examples.
 
 ## Skeleton
 
 ```markdown
-# <Project name>
+# <Product or feature name>
 
-## What we're building
-<1-2 sentences: what it does, who uses it, where it runs.>
+## Product agreement
+<What it does, who uses it, and the real workflow it supports.>
 
-## Contract
+GOAL: <The overall observable outcome.>
 
-GOAL: <Success as an observable outcome, with a number where possible.>
+SCOPE:
+- Included: <workflows and capabilities covered now>.
+- Excluded: <explicit boundaries>.
 
 CONSTRAINTS:
-- <Hard limit — stack, budget, scope, compatibility>
-- <...>
+- <Hard limits: budget, compatibility, permissions, required stack if specified>.
 
 FORMAT:
-- <Exact output shape — files, structure, where it runs, what's included>
-- <...>
+- <Required inputs, outputs, destinations, and delivery surface>.
 
-FAILURE (any of these = not done):
-- <Concrete, checkable condition>
-- <...>
+## Business rules
+- <Agreed calculations, thresholds, permissions, and exception behavior>.
 
-## Built on top of
-- <library / framework / repo> — <what it saves us from building; maintenance status; license>
-- <...>
+## SUCCESS — acceptance criteria
+| ID | Scenario / example input | Expected result | Acceptance check |
+| --- | --- | --- | --- |
+| S1 | <Actor, starting conditions, trigger> | <Observable result; agreed threshold if relevant> | <How to observe or test it> |
+| S2 | <Meaningful alternative scenario> | <Specific expected result> | <How to observe or test it> |
 
-## Gotchas we're handling
-- <We handle X by doing Y.>
-- <...>
+## FAILURE — any triggered condition means not done
+| ID | Scenario / trigger | Unacceptable outcome | Acceptance check |
+| --- | --- | --- | --- |
+| F1 | <Relevant error or edge case> | <Concrete prohibited result> | <How to detect it> |
+| F2 | <Another distinct failure scenario> | <Concrete prohibited result> | <How to detect it> |
 
-## Build sequence
-1. <Phase 1 — something runnable/testable early>
-2. <Phase 2>
-3. <...>
+<Add enough distinct criteria for the actual workflows and risks; the sample rows are not a quota or a limit.>
 
-## How to run and test
-- Run: `<command>`
-- Tests: `<command>`
-- Setup notes: <env vars needed (names only), accounts, one-time steps>
-
-## Status
-_Updated: <YYYY-MM-DD>_
-- Built: <what works right now>
-- Changed from plan: <decision + why>, or "nothing yet"
-- Next: <the next phase or open item>
-- Watch out for: <anything surprising a new session must know>
+## Unresolved product decisions
+- <Only when applicable: the missing decision and affected behavior; clearly unapproved>.
 ```
+
+## Example of useful precision
+
+- Success: Given a valid request, when the caller retries that same request, the system returns the original record and the stored record count remains one. Check by submitting the same request twice and inspecting both responses and stored data.
+- Failure: When a request is rejected for invalid input, any record is created or any customer email is sent. Check both stored data and the email boundary after the rejected request.
+
+These are examples, not default requirements. Choose relevant scenarios with the user. An acceptance check describes how to determine whether a requirement holds; execution dates, commands, pass/fail results, and evidence belong outside the agreement.

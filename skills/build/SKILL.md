@@ -1,7 +1,7 @@
 ---
 name: build
 description: >
-  Start here before any build, change, fix, refactor, or improvement, including websites and landing pages. Always read references/principles.md and apply it throughout every iteration. Route frontend work to one appropriate frontend design skill without requiring SPEC.md. Use the remaining interview, research, SPEC.md, tests-first, and phased-build protocol only for backend and other non-frontend work: scripts, CLI tools, automations, scrapers, bots, AI agents, APIs, integrations, and server-side app features. For mixed projects, apply that protocol only to the non-frontend portion. Resume existing backend work from SPEC.md when present. If the user asks to skip planning, still apply the principles and frontend/backend routing.
+  Start here before any build, change, fix, refactor, or improvement, including websites and landing pages. Apply references/principles.md throughout every iteration and maintain a concise project-root changelog.md for all work. Websites and frontend do not require SPEC.md; route them to one appropriate design skill. For backend and other non-frontend work, ask thoughtful gap-driven questions, research existing solutions, define a product agreement in SPEC.md with specific success and failure criteria, then test and build in phases. For mixed projects, apply that protocol only to the non-frontend portion. Keep plans and progress outside SPEC.md. If the user asks to skip planning, still apply the shared principles, changelog, and scope routing.
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit, Task, Agent, WebSearch, WebFetch, AskUserQuestion
 ---
 
@@ -15,9 +15,26 @@ Before planning or making any change, read [references/principles.md](references
 
 Keep these principles active throughout the work: revisit them before each iteration or phase, when changing approach, and before delivery. Apply the relevant principles within the task's scope and authorization; do not treat them as a one-time preflight checklist. Reading them does not require a SPEC.md for frontend work.
 
+## Keep documents separate — all work, including frontend
+
+- **`SPEC.md` is only the product agreement:** intended users, scope, required behavior, business rules, hard constraints, and observable success/failure criteria. Unresolved product decisions must be clearly marked as unapproved. Do not put architecture research, build sequences, setup commands, progress, test results, or session history in it. Only change an agreed requirement when the user authorizes that change; never rewrite it to match an implementation defect.
+- **`README.md` explains the project:** where things live, setup/run/test commands, and current technical choices. Update it after significant changes if it exists. Put detailed design or research in an existing appropriate document when needed; do not create paperwork for its own sake. Keep implementation tasks in the session plan or existing task tracker.
+- **`changelog.md` is required at the project root for every project changed**, including websites, landing pages, frontend-only fixes, and backend work. Use this exact lowercase filename. Create it if missing and keep it current as meaningful work is completed, including partial work at handoff. Read the latest relevant entry when resuming.
+
+Keep each changelog entry concise: date and scope, what changed and why, verification actually performed (command/environment or browser evidence), and any material limitation or next action. Distinguish implemented, verified, deployed, and enabled for customers; claim only what was checked. Use a few bullets per meaningful change, newest first. Do not log every tool call, repeat the whole spec, include transcripts, or expose secrets/customer data. If checks were not run, say so. Existing history in another changelog stays intact; avoid duplicating it when introducing `changelog.md`.
+
+Example entry:
+
+```markdown
+## YYYY-MM-DD — Short change description
+- Changed: <observable change and why>.
+- Verified: <checks actually run, environment, result/evidence>.
+- Remaining: <material limitation or next action, only if needed>.
+```
+
 ## Next: Route frontend and non-frontend work
 
-**Everything below this routing section is only for backend and other non-frontend work.** Frontend work follows the principles above and one frontend design skill instead of the protocol below.
+**The numbered build protocol below is only for backend and other non-frontend work.** Frontend work follows the shared principles, documentation/changelog requirements above, and one frontend design skill.
 
 For frontend work, choose **one** skill for the task and follow its workflow. Honor the user's named skill first; otherwise select by scope:
 
@@ -29,7 +46,7 @@ For frontend work, choose **one** skill for the task and follow its workflow. Ho
 
 Do not combine these design skills or stack their visual rules; they contain conflicting requirements. Use Hallmark on an existing design only when the user explicitly requests it. Preserve the project's established design system when making focused changes.
 
-**Frontend-only work stops here.** Do not create or require `SPEC.md`, run the backend interview, or impose the backend tests-first protocol on a website, landing page, or UI-only change. Use the selected frontend skill's planning and validation, and verify the result in a real browser with desktop and mobile screenshots. The shared principles still apply on every iteration.
+**Frontend-only work stops here after applying the shared requirements.** Do not create or require `SPEC.md`, run the backend interview, or impose the backend tests-first protocol on a website, landing page, or UI-only change. Use the selected frontend skill's planning and validation, verify the result in a real browser with desktop and mobile screenshots, inspect those screenshots, and record the change and verification in `changelog.md`. The shared principles still apply on every iteration.
 
 For a project with both frontend and backend work, route the UI to one frontend skill and apply the protocol below only to the backend portion. A backend `SPEC.md` may document the interfaces the UI depends on; it does not turn UI work into a backend workflow. A page that only uses an existing API remains frontend work unless backend changes are also needed.
 
@@ -44,29 +61,38 @@ Four failure modes this skill exists to prevent:
 - **Tests written after the code** → they get shaped to pass against the code that exists, not against what the user needs.
 - **Rebuilding what exists** → most features already exist as free, maintained libraries and repos. New ones are published daily. Search first.
 
-Everything discovered here lives in one file, `SPEC.md`, at the project root. It's the memory of the project: a fresh agent in a new session should read it once and be able to continue without re-interviewing anyone.
+The agreed product behavior lives in `SPEC.md` at the project root. A fresh agent uses it to understand the agreement, the README to run/check the project, and `changelog.md` plus the current code to understand progress. Keep these responsibilities separate.
 
 ## Step 0: Is there already a SPEC.md?
 
-After reading the principles and routing the work, look for `SPEC.md` in the project root. If it exists, read it, then read its **Status** section twice. That's where you are. Skip the interview, skip the initial research, and pick up the backend build sequence from where Status says it stopped. If Status is stale or contradicts the code, fix Status first — a wrong map is worse than no map.
+After reading the principles and routing the work, look for `SPEC.md` in the project root. If it exists, read the agreement, README, latest relevant `changelog.md` entries, and the code/tests for the requested work. Reuse answered questions and valid research; ask only about new scope, missing decisions, ambiguity, or changed constraints. Do not assume the existence of a spec means every new requirement is settled.
+
+If the implementation contradicts an approved requirement, report the mismatch and fix the implementation within scope; do not silently change the agreement. If an older spec mixes requirements with progress/design notes, preserve its product rules and move the relevant non-product material to the appropriate documents when working on that area. Do not restructure unrelated projects.
 
 If there's no SPEC.md, continue.
 
 ## Step 1: Interview the user
 
-Goal: leave this step able to write **GOAL** and **FAILURE** lines that are concrete enough to test. Not "it should work well" — that's a wish, not a criterion.
+Goal: understand the important workflows well enough to write multiple specific **SUCCESS** and **FAILURE** criteria. One broad GOAL and a few generic failure bullets are not enough for a substantial feature.
 
-Use `AskUserQuestion` if it's available (batches of up to 4 questions, offer sensible options); otherwise ask in chat. Plain language, no jargon. Cover, in roughly this order:
+Before asking anything, read the request, relevant conversation, existing agreement, README, and available code/examples. Separate what is already known from what needs the user's judgment. Every question must resolve a meaningful gap that could change behavior, scope, cost, permissions, or acceptance. Do not ask obvious questions, repeat answered ones, ask the user to discover technical facts you can inspect, or invent questions to fill a quota. Make routine implementation decisions yourself and explain material tradeoffs.
 
-1. **What it does, who uses it, where it runs.** One or two sentences you could repeat back. Local script, API, web app backend, Telegram bot, background job, AI agent with tool access?
-2. **What "done" looks like as observable behavior.** Ask for the moment they'd sit back and say "yes, this is it". Push until it's something you could watch happen: "a stranger fills the form on their phone and I get an email within a minute" — not "the form works".
-3. **What would make them call it a failure even if it technically works.** This is the most important question and the one people skip. Slow? Ugly? Spams them with notifications? Misses items? Costs money per run? Needs babysitting? Get 3+ concrete lines.
-4. **Non-negotiables.** Stack or tools they already pay for or know, accounts they already own, budget (especially for metered APIs), deadline, anything that must stay the same.
-5. **What's explicitly out of scope.** Naming what you're *not* building prevents the plan from ballooning.
+Use an available question tool in small focused batches, respecting its limits; otherwise ask in chat. Use plain language, concrete examples, and sensible options with consequences. For a substantial build, explore the relevant areas below as deeply as needed to settle the important decisions:
 
-When an answer is vague, don't accept it — offer two or three concrete interpretations and let them pick. Two rounds of questions is usually enough; after that, state your assumptions explicitly and let them correct you rather than interrogating further.
+1. **Users and the real workflow.** Who does each step, what triggers it, what must happen next, and when is the work complete?
+2. **Inputs and outputs.** Concrete sample inputs, required fields, formats, destinations, and the exact result the user expects.
+3. **Business rules and boundaries.** Thresholds, calculations, exceptions, conflicting inputs, and what happens at the boundary or when a value is unknown.
+4. **Success examples.** Walk through normal and important alternative scenarios; agree on the expected result for each.
+5. **Unacceptable outcomes.** Ask what would make each workflow fail even if the code runs: wrong result, missing data, duplicate action, silent failure, or excessive manual work.
+6. **Failure and recovery.** Invalid/empty input, unavailable dependencies, interrupted runs, retries, and what the user sees or can do next.
+7. **Access and external actions.** Who may see/change what; which actions need review; what must never be sent, deleted, charged, or exposed automatically.
+8. **Timing, volume, and cost.** Realistic usage, deadlines for results, tolerable delays, operating limits, and budgets when relevant.
+9. **Compatibility and non-negotiables.** Existing workflows/data that must keep working, accounts/tools already chosen, and hard constraints.
+10. **Scope and unresolved choices.** What is included now, excluded, or still requires a product decision.
 
-If the user already hands you a contract or a detailed spec, don't re-interview — validate it (Step 4's checks) and ask only about gaps.
+Treat this as a thinking guide, not a questionnaire to recite. Ask more useful questions when uncertainty remains; stop when the important scenarios and decisions are clear, regardless of the number of rounds. For vague answers, offer concrete interpretations and examples. Record low-impact assumptions explicitly; do not present an unconfirmed business rule, permission, destructive action, or spending limit as agreed. Continue independent work while awaiting decisions that block only part of the task.
+
+If the user provides a detailed contract, validate it using Step 4 and ask only about meaningful gaps. Existing answers should reduce the interview, not prevent follow-up on missing cases.
 
 ## Step 2: Research prior art — in parallel, and for the whole build
 
@@ -79,9 +105,9 @@ The premise: for almost any feature you're about to write, someone already publi
 3. **Full open-source projects** doing something close to the whole thing. Even an imperfect match shows what the hard parts turned out to be.
 4. **Known gotchas for the specific APIs and services involved** — search "[service] API rate limit", "[library] common issues", "[service] webhook reliability". This is where the not-in-the-docs problems live.
 
-For each promising find record: what it saves you from building, maintenance status (last commit / release — don't recommend anything abandoned), license, and the use-vs-build tradeoff. Bias hard toward using well-maintained existing tools for anything that isn't the unique point of this project. If research changes the recommended approach, say so plainly — that's often the most valuable output of the whole step.
+For each promising find record: what it saves you from building, maintenance status (last commit / release — don't recommend anything abandoned), license, and the use-vs-build tradeoff. Keep technical findings in the README or an appropriate design/research note, outside `SPEC.md`. Bias hard toward using well-maintained existing tools for anything that isn't the unique point of this project. If research changes the recommended approach, say so plainly — that's often the most valuable output of the whole step.
 
-**This rule stays on for the entire backend build, not just planning.** Whenever a new sub-problem appears mid-implementation (parsing a format, retry logic, an API integration, a scraping target), spend a minute searching before hand-rolling it. Note anything adopted in SPEC.md under *Built on top of*.
+**This rule stays on for the entire backend build, not just planning.** Whenever a new sub-problem appears mid-implementation (parsing a format, retry logic, an API integration, a scraping target), spend a minute searching before hand-rolling it. Record adopted tools in the README or existing technical notes, and summarize material changes in `changelog.md`.
 
 ## Step 3: Backend and non-frontend gotcha pass
 
@@ -103,7 +129,7 @@ From each file, pull the 3-6 items that actually matter for *this* project — n
 - **Boring but critical**: where secrets live and how they stay out of git, what gets logged, what happens on restart or redeploy, what a metered API costs at realistic usage.
 - **Hard to change later**: data model, database choice, auth approach, anything with lock-in. Flag these explicitly.
 
-Write each as a decision, not a worry: "we handle X by doing Y". A bare list of risks isn't a plan.
+Turn relevant risks into decisions. Put required user-visible behavior and limits in the product agreement; put the technical approach in the README or design notes. For example, "a retry must not create a second invoice" is a product requirement; the database mechanism enforcing it is an implementation choice. Ask about unresolved product tradeoffs instead of treating an agent assumption as approved.
 
 ## Step 4: Write SPEC.md and get a go-ahead
 
@@ -111,59 +137,64 @@ Copy the skeleton from `references/spec-template.md` into `SPEC.md` at the proje
 
 - **GOAL** — what success looks like, with a number or an observable outcome. "Handles 50 leads/day" not "handles leads"; "user can filter by date and status" not "add filtering".
 - **CONSTRAINTS** — only hard, non-negotiable limits: stack, budget, scope, compatibility.
-- **FORMAT** — the exact shape of the output: files, structure, where it runs, what's included.
-- **FAILURE** — the lines that mean "not done" even if it technically works. Missing edge case, silent error swallowing, performance miss, over-engineering, anything from the interview's failure question. Each line should be checkable.
+- **FORMAT** — the required inputs, outputs, delivery surface, and externally observable structure. Internal folders/architecture belong in technical documentation unless explicitly required by the user.
+- **SUCCESS** — multiple identifiable acceptance criteria (`S1`, `S2`, ...), covering each important workflow and its meaningful alternatives. State the actor/trigger, starting conditions or example input, expected result, and agreed threshold where relevant.
+- **FAILURE** — identifiable rejection criteria (`F1`, `F2`, ...): concrete conditions that mean the result is unacceptable even if it runs. Cover relevant wrong results, boundary/unknown inputs, denied access, duplicate or partial actions, outages/recovery, and cost/timing limits. Each must describe an observable prohibited outcome and how it can be checked.
 
-Before presenting it, check the contract is **complete** (all four sections filled), **consistent** (constraints don't contradict the goal), **testable** (every FAILURE line can actually be verified), and **scoped** (the goal is reachable within the constraints). If a FAILURE line can't be verified, mark it `UNVERIFIABLE` and say how the user can check it manually. If a FAILURE line contradicts the GOAL, flag it and ask which wins.
+Increase coverage by finding distinct meaningful cases, not by restating the same rule. Avoid vague words such as "fast", "accurate", "secure", or "works correctly" without a scenario and observable expectation. Do not invent numerical promises; agree on material thresholds or mark them as unresolved. A useful criterion looks like: "Submitting the same request twice creates one record and returns the existing record on retry." A failure example: "A rejected request still creates a record or sends an email."
 
-Keep the whole file readable by someone non-technical: name the tradeoff and its real-world consequence ("SQLite means this breaks if several people write at once — fine for a personal tool, a problem if it grows"), not just the technical term.
+Before presenting it, check the agreement is **complete** (scope, GOAL, CONSTRAINTS, FORMAT, SUCCESS, and FAILURE), **consistent**, **testable**, and **scoped**. Every important workflow needs success coverage and relevant failure/edge cases. Each criterion needs a feasible automated or manual acceptance check; unresolved expectations must stay visibly unapproved and block only the affected work. A requirement that cannot yet be checked is not a pass. If criteria conflict, explain the concrete tradeoff and ask which outcome is intended.
+
+Keep the agreement readable by someone non-technical: explain required behavior and the real-world consequence of a constraint. Preserve important rules when shortening it; move detailed product rules to linked feature agreements if needed rather than deleting acceptance coverage to meet an arbitrary line count.
 
 Present SPEC.md and wait for a go-ahead or corrections before writing code, unless the user has clearly said "just build it". If they push back on a recommendation and you think it'll cause a problem later, say so once, plainly — then follow their call.
 
 ## Step 5: Write the tests before the code
 
-Derive tests from the GOAL and FAILURE lines *now*, before any application code exists. This ordering is the point: a model writing tests after the code has the code in front of it and will, without meaning to, write tests that the existing code passes. Tests written first are an honest oracle — they test what the user asked for.
+Derive tests from the agreed SUCCESS and FAILURE criteria *now*, before adding or changing the application behavior. Writing them first helps avoid shaping expectations around the implementation, but tests can still encode a misunderstanding; check their expected answers against the agreed examples. Explain changes to expected business results and the user decision authorizing them.
 
 - Cover the important features, not everything. A handful of tests that catch the FAILURE lines beats fifty that check nothing the user cares about.
-- Make them runnable with one command, and record that command in SPEC.md under *How to run and test*. If the user can't run them, they don't exist.
-- Run them once before building. They should fail. A test that passes against nothing isn't testing anything.
+- Make them runnable with one command, documented in the README or existing run guide. Refer to criterion IDs in meaningful tests/manual checks so coverage can be traced.
+- Run new regression/behavior tests before changing that behavior; see the relevant test fail for the expected reason. Existing tests can already pass. If an honest automated test is impractical, define a concrete manual acceptance check instead of writing a meaningless test.
 
-Don't touch application code until the tests are written and failing.
+Do not implement new behavior until its meaningful tests or manual acceptance checks are defined. Passing tests never authorize silently weakening the agreement.
 
 ## Step 6: Build in phases, keep SPEC.md current
 
-Follow the build sequence from SPEC.md — something runnable early, then layered on, rather than one big-bang implementation. This surfaces problems while they're cheap.
+Keep the build sequence in the session plan or existing task tracker — something runnable early, then layered on, rather than one big-bang implementation. This surfaces problems while they're cheap.
 
-After each phase: run the tests, then update SPEC.md's **Status** section. Concisely. Status answers "where are we and what changed" for a fresh agent — what's built and working, any decision that changed from the original plan and why, anything surprising the next session needs to know. It's not a changelog; when it grows, compress it. Aim to keep the whole SPEC.md under ~150 lines so it's cheap to inject into a new session.
+After each meaningful phase: run the relevant checks and update `changelog.md` with the change, why, evidence/environment, and material remaining work. Update the README when setup, commands, or significant technical choices change. Update `SPEC.md` only when an agreed product requirement changes; keep it free of progress/status sections and verification history.
 
 Keep the Step 2 research rule live throughout.
 
 **Write code the user can navigate.** They're new to coding and will open these files to understand what's going on, so structure and naming matter more than usual:
 
 - Folder structure and file names should say what things are. `nodes/fetch_news.py` and `send_telegram_alert.py`, not `utils2.py` and `handler.py`. Someone should be able to guess what a file does from its name and where it sits before opening it. Keep this intuitive without sacrificing efficiency — don't split things into ten files when three clear ones do the job.
-- Every important file starts with a short note — two to four sentences — saying what the file does and how it fits in. Not a paragraph of backstory or design rationale; that belongs in SPEC.md or a README. A codebase that's 40% prose is harder to read, not easier.
+- Every important file starts with a short note — two to four sentences — saying what the file does and how it fits in. Not a paragraph of backstory or design rationale; technical rationale belongs in the README or design notes. A codebase that's 40% prose is harder to read, not easier.
 - Inside files, comment sparingly: explain the *why* of anything non-obvious, not the *what* of every line.
 
 ## Step 7: Verify against the contract, then deliver
 
-Before calling anything done, walk every FAILURE line as a checklist with evidence, confirm the GOAL metric, run the tests, and report it:
+Before calling anything done, walk the SUCCESS and FAILURE criteria with evidence, confirm the GOAL and constraints, run the relevant checks, and report it. Use `PASS`, `FAIL`, `NOT CHECKED`, or `BLOCKED` honestly; do not label unrun checks as passing:
 
 ```
-Contract status: ALL PASS
+Contract status: <ALL PASS / INCOMPLETE>
 
-GOAL: ✓ {evidence}
-CONSTRAINTS: ✓
-FORMAT: ✓
-FAILURE lines: ✓ {n} of {n} verified — none triggered
-Tests: ✓ {command} — {n} passing
+GOAL: {status and evidence}
+CONSTRAINTS: {status and evidence}
+FORMAT: {status and evidence}
+SUCCESS criteria: {criterion IDs and evidence/results}
+FAILURE criteria: {criterion IDs and evidence/results}
+Checks: {command or manual flow, environment, actual results}
+Remaining: {unverified/blocked items, if any}
 ```
 
 If something failed and couldn't be resolved, say exactly which line, why, and the options — don't quietly relax the contract. "Any of these = not done" means what it says.
 
-Then do a final Status update in SPEC.md.
+Finish the concise `changelog.md` entry. Keep implementation, verification, deployment, and customer enablement distinct. Do not add a Status section or delivery report to `SPEC.md`.
 
 ## Reference files
 
 - [references/principles.md](references/principles.md) — mandatory foundation for every change and every iteration, frontend and backend alike.
-- `references/spec-template.md` — the SPEC.md skeleton and rules for keeping it short.
+- `references/spec-template.md` — the product-agreement-only skeleton and acceptance-criteria guidance.
 - `references/gotchas-*.md` — backend and non-frontend checklists for Step 3 (see table above). `gotchas-website.md` is not part of this backend protocol.

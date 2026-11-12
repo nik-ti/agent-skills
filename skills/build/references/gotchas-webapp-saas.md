@@ -1,6 +1,6 @@
 # Gotchas: web apps and SaaS (backend, accounts, database, payments, deployment)
 
-Pull the 3-6 per section that matter. Also read `gotchas-website.md` for the frontend half. Write each into SPEC.md as "we handle X by doing Y".
+Select the concerns that matter. Record required behavior, limits, and acceptance criteria in `SPEC.md`; record technical approaches in the README or design notes and progress/verification in `changelog.md`. Route the frontend half to one design skill through `build`; frontend-only work does not require a spec.
 
 ## Hard to change later — decide deliberately
 - Database choice is decided by concurrency, not preference: single user or a few → SQLite is fine; many people writing at once → Postgres/MySQL. Say which and why.
@@ -10,7 +10,7 @@ Pull the 3-6 per section that matter. Also read `gotchas-website.md` for the fro
 - Auth approach: rolling your own is the classic mistake. Use a maintained library or a hosted provider (Clerk, Auth0, Supabase Auth, NextAuth, etc.).
 
 ## Auth and security
-- Secrets never in git: `.env` + confirm `.gitignore` actually excludes it. Reference variable names in SPEC.md, never values.
+- Secrets never in git: `.env` + confirm `.gitignore` actually excludes it. Document required variable names in the README or setup guide, never values.
 - Passwords hashed with a proper algorithm (bcrypt/argon2) — never plaintext, never reversible.
 - Authorization checked on every request: being logged in doesn't mean allowed to see or edit *this* record.
 - Rate limit or lock out auth endpoints to blunt brute force.

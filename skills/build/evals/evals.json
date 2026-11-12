@@ -3,68 +3,76 @@
   "evals": [
     {
       "id": 0,
-      "prompt": "I run a small house painting business and want a simple website where people can request a free quote. Just a one-pager with a form (name, phone, address, what they want painted) that sends me an email. Can you build it? Note: you can't reach me during this task \u2014 if you'd normally ask me questions, write them to questions.md along with the answers you're assuming, then proceed.",
-      "expected_output": "questions.md with clarifying questions and assumptions; SPEC.md with a 4-part contract, research findings naming a form backend / static host, gotchas as decisions, build sequence; tests or a manual test checklist created before the site code; the site itself.",
+      "prompt": "Build a one-page website for my house painting business. The quote form posts to my existing form-provider endpoint; there is no custom backend to build or change. Preserve the supplied fields and use placeholder business copy where needed. I cannot reply during this task; record only meaningful unresolved questions and low-impact assumptions, then proceed. Do not send real submissions.",
+      "expected_output": "A frontend-only website using one appropriate design skill; desktop and mobile browser screenshots inspected; concise root changelog.md. No SPEC.md or backend interview/tests-first workflow. README updated if it exists and setup changes.",
       "files": [],
       "assertions": [
-        "questions.md exists and lists clarifying questions before any code (interview happened)",
-        "SPEC.md exists at the project root",
-        "SPEC.md contains all four contract sections: GOAL, CONSTRAINTS, FORMAT, FAILURE",
-        "FAILURE section has at least 3 concrete, checkable conditions (not vague wishes)",
-        "SPEC.md names at least 2 specific existing libraries/services/repos it builds on, with a note on what each saves (research happened)",
-        "SPEC.md has a gotchas section phrased as decisions ('we handle X by doing Y'), not a bare risk list",
-        "SPEC.md includes the exact command(s) to run the project and the tests",
-        "SPEC.md has a Status section a fresh agent could resume from",
-        "SPEC.md is under 150 lines",
-        "Test files (or a manual test checklist for UI-only work) were created BEFORE application code, per the transcript order",
-        "Tests are runnable with one command and exercise at least one FAILURE condition",
-        "Every important source file starts with a short 2-4 sentence note explaining what it does; no paragraph-long headers",
-        "File and folder names are descriptive enough to guess contents without opening them",
-        "Secrets are read from env vars / .env and .env is gitignored"
+        "No SPEC.md is created or required for this frontend-only task",
+        "Exactly one appropriate design skill is selected and its workflow is followed",
+        "No backend interview or backend tests-first gate is imposed",
+        "Existing facts such as the form destination and frontend-only scope are not asked again",
+        "Desktop and mobile browser screenshots are captured and visually inspected",
+        "changelog.md exists at the project root and records the meaningful change and actual verification concisely",
+        "No live submissions are sent and unperformed checks are not claimed as passing"
       ]
     },
     {
       "id": 1,
-      "prompt": "make me a telegram bot that checks a few RSS feeds (hacker news, techcrunch) every hour and posts new articles to my channel with a one-line summary. python please. Note: you can't reach me during this task \u2014 if you'd normally ask me questions, write them to questions.md along with the answers you're assuming, then proceed.",
-      "expected_output": "questions.md; SPEC.md with contract incl. FAILURE lines like duplicate posts / silent death; research naming feedparser, python-telegram-bot, existing RSS-to-Telegram repos; tests written before the bot code covering dedupe and parsing; navigable file structure with short file-top notes.",
+      "prompt": "Make me a Python Telegram bot that checks Hacker News and TechCrunch RSS feeds every hour and posts new articles to my channel with a one-line summary. I cannot reply during this task: write meaningful questions and clearly labeled assumptions to questions.md, continue independent work, and do not send real posts. Do not treat unknown spending or posting permissions as approved.",
+      "expected_output": "Thoughtful unresolved questions without repeating supplied facts; product-only SPEC.md with multiple specific success/failure criteria; technical research and run/test commands outside SPEC.md; tests/manual checks before behavior changes; concise changelog.md including limitations.",
       "files": [],
       "assertions": [
-        "questions.md exists and lists clarifying questions before any code (interview happened)",
-        "SPEC.md exists at the project root",
-        "SPEC.md contains all four contract sections: GOAL, CONSTRAINTS, FORMAT, FAILURE",
-        "FAILURE section has at least 3 concrete, checkable conditions (not vague wishes)",
-        "SPEC.md names at least 2 specific existing libraries/services/repos it builds on, with a note on what each saves (research happened)",
-        "SPEC.md has a gotchas section phrased as decisions ('we handle X by doing Y'), not a bare risk list",
-        "SPEC.md includes the exact command(s) to run the project and the tests",
-        "SPEC.md has a Status section a fresh agent could resume from",
-        "SPEC.md is under 150 lines",
-        "Test files (or a manual test checklist for UI-only work) were created BEFORE application code, per the transcript order",
-        "Tests are runnable with one command and exercise at least one FAILURE condition",
-        "Every important source file starts with a short 2-4 sentence note explaining what it does; no paragraph-long headers",
-        "File and folder names are descriptive enough to guess contents without opening them",
-        "Secrets are read from env vars / .env and .env is gitignored"
+        "Questions concern unresolved behavior such as summary method, backlog, duplicate handling, recovery and budgets; they do not ask the already supplied language, sources or hourly schedule",
+        "Unconfirmed product rules, spending and external action permissions remain visibly unapproved rather than being silently assumed",
+        "SPEC.md contains goal, scope, constraints, input/output expectations, and multiple distinct success and failure criteria tied to observable scenarios",
+        "Acceptance coverage includes meaningful normal, duplicate, empty/malformed feed, outage, restart/retry and cost cases where relevant, rather than a few generic wishes",
+        "SPEC.md contains no implementation plan, progress/status log, test execution results or setup commands",
+        "Library research and exact run/test commands are documented outside the product agreement",
+        "Meaningful checks are defined before implementing the relevant behavior and expected results match the agreement",
+        "changelog.md summarizes meaningful changes, actual verification/environment and unresolved work without a tool-by-tool log",
+        "No real Telegram posts or paid model calls occur without the required authorization"
       ]
     },
     {
       "id": 2,
-      "prompt": "I want an AI agent that reads my gmail inbox every morning, figures out which emails actually need a reply from me, and sends me a short prioritized list. Note: you can't reach me during this task \u2014 if you'd normally ask me questions, write them to questions.md along with the answers you're assuming, then proceed.",
-      "expected_output": "questions.md; SPEC.md with contract incl. cost per day, prompt injection handling, read-only Gmail scope; research naming Gmail API client and existing inbox-triage projects; tests before code (classification on sample emails, dedupe); the agent code.",
+      "prompt": "I want an AI agent that reads my Gmail inbox each morning and gives me a short prioritized list of messages that need a reply. It must never send email or change mailbox state. Before building, ask me whatever is meaningfully unresolved. You can inspect existing project context. I have not yet defined which messages count as needing a reply.",
+      "expected_output": "A gap-driven interview exploring real message examples, priorities, delivery, timing, privacy and cost only where unresolved. A product agreement after sufficient clarity, with distinct scenario-based success/failure criteria and explicit read-only scope. Technical plans, commands, progress and evidence outside SPEC.md; required changelog.md.",
       "files": [],
       "assertions": [
-        "questions.md exists and lists clarifying questions before any code (interview happened)",
-        "SPEC.md exists at the project root",
-        "SPEC.md contains all four contract sections: GOAL, CONSTRAINTS, FORMAT, FAILURE",
-        "FAILURE section has at least 3 concrete, checkable conditions (not vague wishes)",
-        "SPEC.md names at least 2 specific existing libraries/services/repos it builds on, with a note on what each saves (research happened)",
-        "SPEC.md has a gotchas section phrased as decisions ('we handle X by doing Y'), not a bare risk list",
-        "SPEC.md includes the exact command(s) to run the project and the tests",
-        "SPEC.md has a Status section a fresh agent could resume from",
-        "SPEC.md is under 150 lines",
-        "Test files (or a manual test checklist for UI-only work) were created BEFORE application code, per the transcript order",
-        "Tests are runnable with one command and exercise at least one FAILURE condition",
-        "Every important source file starts with a short 2-4 sentence note explaining what it does; no paragraph-long headers",
-        "File and folder names are descriptive enough to guess contents without opening them",
-        "Secrets are read from env vars / .env and .env is gitignored"
+        "The agent asks meaningful follow-up questions using concrete message examples instead of asking whether email sending is permitted or restating known requirements",
+        "The agent does not stop after two rounds if material classification, privacy, delivery or budget decisions remain unresolved",
+        "The agent makes routine inspectable technical choices itself rather than asking the user to discover technical facts",
+        "Success and failure definitions cover actual classification examples and relevant false-positive, missed-message, duplicate-report, permission and cost limits without inventing thresholds",
+        "Read-only mailbox behavior is preserved in the agreement and expected test results",
+        "Unresolved product decisions remain unapproved and only dependent work is blocked",
+        "SPEC.md remains a product agreement; design, progress, commands and verification history stay outside it",
+        "changelog.md records meaningful work and what was or was not verified honestly"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Resume our backend project. SPEC.md already says retries must not duplicate records. The README documents the test command, and changelog.md says the retry test failed last session. Inspect the current implementation and fix the retry behavior. Do not change that requirement.",
+      "expected_output": "Resume using agreement, README, changelog and current code/tests; reproduce the mismatch and fix code without weakening acceptance criteria; concise verification entry in changelog.md.",
+      "files": [],
+      "assertions": [
+        "Resumption uses SPEC.md, README, latest relevant changelog.md and implementation evidence rather than expecting a Status section in SPEC.md",
+        "The agent does not repeat already answered product questions",
+        "The duplicate-prevention agreement and expected business result are preserved when implementation fails",
+        "Relevant checks are run and results/environment are recorded in changelog.md",
+        "No Status section, build plan or delivery report is added to SPEC.md"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Fix the mobile spacing of the existing homepage hero. Keep the copy, links and established design. There are no backend changes. The project currently has no changelog.md.",
+      "expected_output": "A focused frontend fix using the existing-design workflow, with inspected desktop/mobile screenshots and a newly created concise changelog.md. No spec or backend interview.",
+      "files": [],
+      "assertions": [
+        "The agent makes a focused frontend change without requiring or creating SPEC.md",
+        "Existing copy, links, design and unrelated naming are preserved",
+        "The agent verifies and inspects screenshots at both desktop and mobile sizes",
+        "A lowercase project-root changelog.md is created with the change, why and actual verification",
+        "No verbose action log or backend questionnaire is imposed"
       ]
     }
   ]

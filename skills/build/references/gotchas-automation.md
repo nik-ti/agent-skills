@@ -1,6 +1,6 @@
 # Gotchas: automations, scheduled jobs, scrapers, bots, integrations
 
-Pull the 3-6 per section that matter. If it calls an LLM, also read `gotchas-ai-agent.md`. Write each into SPEC.md as "we handle X by doing Y".
+Select the concerns that matter. If it calls an LLM, also read `gotchas-ai-agent.md`. Record required behavior, limits, and acceptance criteria in `SPEC.md`; record technical approaches in the README or design notes and progress/verification in `changelog.md`.
 
 ## Running unattended
 - Overlapping runs: if a job takes longer than its interval, does it double up? Use a lock or skip-if-running.

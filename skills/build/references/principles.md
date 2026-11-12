@@ -121,10 +121,12 @@ Every time you are asked to make a change follow:
 
 # Practice
 
-## Keep a Log
+## Keep a Concise Changelog
 
-* Keep a log of every action you take and the reason you took it.
-* Report that log upon completion.
+* Maintain a project-root `changelog.md` for every project changed, including websites and frontend-only work. Create it if missing.
+* Record meaningful changes and why, checks actually performed with their environment/results, and material limitations or next actions. Keep entries dated, newest first, and concise.
+* Do not record every action or tool call. Summarize the relevant outcome on delivery.
+* Keep `SPEC.md` for the product agreement only; implementation plans, progress, and verification history belong outside it.
 
 ## Guard the Context Window
 

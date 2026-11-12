@@ -1,6 +1,6 @@
 # Gotchas: websites, landing pages, frontend-only
 
-Pull the 3-6 that matter for this project. Write each into SPEC.md as "we handle X by doing Y".
+Use only the concerns relevant to the task. Websites and frontend-only work do not require `SPEC.md`; follow the design skill selected by `build`, verify desktop/mobile in a browser, and keep a concise project-root `changelog.md`. Record significant technical choices in the README or existing design notes.
 
 ## States nobody designs for
 - Loading, empty, and error states for every screen — not just "happy path with data". A blank page while data loads reads as broken.
@@ -32,5 +32,5 @@ Pull the 3-6 that matter for this project. Write each into SPEC.md as "we handle
 - Analytics if the user wants to know if anyone visits (privacy-friendly options exist that need no cookie banner).
 
 ## Design
-- Follow the frontend-design skill if available; avoid templated-default looks. Clean sans-serif fonts, no cursive/italic display fonts.
+- Follow the one design skill selected by `build`; do not stack conflicting design workflows or impose this checklist's typography preferences over that skill or the established design.
 - Accessible contrast and readable font sizes — this is a real-user issue, not a nicety.

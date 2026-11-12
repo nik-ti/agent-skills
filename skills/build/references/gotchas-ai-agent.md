@@ -1,6 +1,6 @@
 # Gotchas: AI agents and LLM-powered features
 
-Pull the 3-6 per section that matter. Also read the file for whatever the agent is wrapped in (bot, web app, script). Write each into SPEC.md as "we handle X by doing Y".
+Select the concerns that matter. Also read the file for whatever the agent is wrapped in (bot, web app, script). Record required behavior, limits, and acceptance criteria in `SPEC.md`; record technical approaches in the README or design notes and progress/verification in `changelog.md`.
 
 ## Cost and limits
 - Cost per call × expected volume, estimated in dollars per day. Metered model APIs surprise people at scale; a loop that retries can multiply it.
