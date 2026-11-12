@@ -15,6 +15,10 @@ Before planning or making any change, read [references/principles.md](references
 
 Keep these principles active throughout the work: revisit them before each iteration or phase, when changing approach, and before delivery. Apply the relevant principles within the task's scope and authorization; do not treat them as a one-time preflight checklist. Reading them does not require a SPEC.md for frontend work.
 
+## Use simple, clear names — all work, including frontend
+
+Always use simple, clear, descriptive names for files, folders, functions, parameters, and variables. Nikita should be able to understand their purpose by reading their names. Prefer familiar business words over cryptic abbreviations, vague labels, or clever shorthand: for example, `calculateTotal`, `customerName`, and `isPaid`. Follow the language's naming conventions and preserve required framework/API names. Apply this throughout every iteration, including inside files, and check naming clarity before delivery.
+
 ## Keep documents separate — all work, including frontend
 
 - **`SPEC.md` is only the product agreement:** intended users, scope, required behavior, business rules, hard constraints, and observable success/failure criteria. Unresolved product decisions must be clearly marked as unapproved. Do not put architecture research, build sequences, setup commands, progress, test results, or session history in it. Only change an agreed requirement when the user authorizes that change; never rewrite it to match an implementation defect.
