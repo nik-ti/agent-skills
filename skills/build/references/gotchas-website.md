@@ -1,6 +1,6 @@
 # Gotchas: websites, landing pages, frontend-only
 
-Use only the concerns relevant to the task. Websites and frontend-only work do not require `SPEC.md`; follow the design skill selected by `build`, verify desktop/mobile in a browser, and keep a concise project-root `changelog.md`. Record significant technical choices in the README or existing design notes.
+Use only the concerns relevant to the task. Websites and frontend-only work do not require `SPEC.md`; follow the design skill selected by `build`, verify desktop/mobile in a browser, and keep a concise project-root `changelog.md` if the site is a real, ongoing product. Record significant technical choices in the README or existing design notes.
 
 ## States nobody designs for
 - Loading, empty, and error states for every screen — not just "happy path with data". A blank page while data loads reads as broken.

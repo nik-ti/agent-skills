@@ -123,7 +123,7 @@ Every time you are asked to make a change follow:
 
 ## Keep a Concise Changelog
 
-* Maintain a project-root `changelog.md` for every project changed, including websites and frontend-only work. Create it if missing.
+* Keep a project-root `changelog.md` only for real, ongoing products (apps, websites, bots, services), frontend or backend. Not for skill libraries, notes, research, experiments, one-off scripts, or config/instruction changes. Create it if a real product lacks one; when unsure, ask.
 * Record meaningful changes and why, checks actually performed with their environment/results, and material limitations or next actions. Keep entries dated, newest first, and concise.
 * Do not record every action or tool call. Summarize the relevant outcome on delivery.
 * Keep `SPEC.md` for the product agreement only; implementation plans, progress, and verification history belong outside it.

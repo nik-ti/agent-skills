@@ -11,7 +11,7 @@ Use this template for backend and other non-frontend work. It records the agreed
 - Keep unresolved product decisions visibly unapproved. Do not silently turn assumptions or current implementation behavior into requirements.
 - Keep requirements concise without removing necessary detail to meet a line cap. Link detailed feature agreements when useful.
 - Change approved requirements only when authorized by the user. Failing code or tests do not change the agreement.
-- Keep setup/test commands and technical choices in the README or an existing run/design guide. Keep concise progress and verification evidence in the required project-root `changelog.md`, including for frontend projects without a spec.
+- Keep setup/test commands and technical choices in the README or an existing run/design guide. Keep concise progress and verification evidence in the project-root `changelog.md` (real, ongoing products only), including frontend projects without a spec.
 - Use plain language and never include secrets or customer data. Use synthetic examples.
 
 ## Skeleton
