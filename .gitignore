@@ -5,5 +5,9 @@
 __pycache__/
 *.py[cod]
 
+# Generated JavaScript dependencies and StageShow build output
+node_modules/
+skills/stageshow/playground/dist/
+
 # Skills auto-synced by Claude Code (managed, not ours)
 skills/synced/
